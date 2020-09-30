@@ -1,22 +1,29 @@
 package userInterface;
 
 import main.Account;
-
 import java.util.Scanner;
 
 
 /**
- *
+ * This class provides all user interface : menu(s), user choices via console input.
+ * Dispatch to correct data/methods regarding user choice.
  */
 public class UserInterface {
-    private Account account;
-    private Scanner scan;
+    private final Account account;
+    private final Scanner scan;
 
+    /**
+     * Constructor - Need user Account to work with
+     * @param userAccount -> user Account
+     */
     public UserInterface(Account userAccount){
         this.account = userAccount;
         this.scan = new Scanner(System.in);
     }
 
+    /**
+     * Launch user interface.
+     */
     public void start() {
 
         System.out.println("\nWelcome to TrackMoney.");
@@ -28,8 +35,13 @@ public class UserInterface {
     }
 
 
-    // -------------------------------- UI display ---------------------------------
+    // =============================================================================================
+    // -------------------------------- UI display - Main methods ----------------------------------
+    // =============================================================================================
 
+    /**
+     * First choice for user - Main menu.
+     */
     private void offerOptions() {
 
         System.out.println("---------------------------------------");
@@ -40,7 +52,7 @@ public class UserInterface {
                 "(4) Save and quit. \n");
 
 
-        int input = getExpectedInput(1,4);
+        int input = getExpectedInteger(1,4);
 
         switch (input) {
             case 1 : this.showItemsPicked("All", "Month", "Descending"); break;
@@ -51,7 +63,9 @@ public class UserInterface {
         }
     }
 
-
+    /**
+     * Choice n°1 - Show user items already in file
+     */
     private void showItemsPicked(String what, String sortBy, String how) {
 
         displayAskedItems(what, sortBy, how);
@@ -60,7 +74,7 @@ public class UserInterface {
 
         displayOptions(options);
 
-        int input = getExpectedInput(1,6);
+        int input = getExpectedInteger(1,6);
 
         switch (input) {
             case 1 : this.showItemsPicked(options[0], sortBy, how); break;
@@ -73,22 +87,72 @@ public class UserInterface {
         }
 
     }
-
+    /**
+     * Choice n°2 - Add a new item
+     */
     private void addItemPicked() {
-        System.out.println("Deal with new item");
-    }
+        System.out.println("\n ------------------------------------ \n");
+        System.out.println("Please enter new item details :");
+        System.out.println("Type : (1) Expense - (2) Income :");
 
+        int inputType = getExpectedInteger(1,2);
+
+        System.out.println("Title :");
+        String inputTitle = getExpectedString(3, 20);
+
+        System.out.println("Amount : ");
+        int inputAmount = getExpectedInteger(0, 10000000);
+
+        System.out.println("Month : (0) Current month - (1) January - (2) February - ... -> ");
+        int inputMonth = getExpectedInteger(0, 12);
+
+        System.out.println("This object will be created : " +
+                inputType + " - " + inputTitle + " - " + inputAmount + " - " + inputMonth + ".");
+
+        System.out.println("(1) Save - (2) Erase and restart");
+        int inputSaveOrNot = getExpectedInteger(1,2);
+
+        if (inputSaveOrNot == 1) {
+            System.out.println("Saved!");
+            this.offerOptions();
+        } else {
+            System.out.println("Current item deleted.");
+            this.addItemPicked();
+        }
+
+    }
+    /**
+     * Choice n°3 - Edit an item which is already set
+     */
     private void editItemPicked() {
-        System.out.println("Deal with editing options");
+        System.out.println("\n ------------------------------------ \n");
+        System.out.println("Deal with editing options - Not Ready ");
+
     }
 
+    /**
+     * Choice n°4 - End program
+     */
     private void saveAndQuit() {
-        System.out.println("Save and quit");
+        System.out.println("\n ------------------------------------ \n");
+        System.out.println("Saved ! \n\nGood Bye :-)");
     }
 
 
-    // ---------------------------- Display items (Show) -------------------------------
 
+
+    // =============================================================================================
+    // -------------------------------- UI display - Display items (1) -----------------------------
+    // =============================================================================================
+
+    /**
+     * Define options regarding the current user choice.
+     * Avoid duplication : we do not offer the current displaying
+     * @param what -> What are we displaying ? all, only expenses or only incomes
+     * @param sortBy -> Sort by ? month, title or amount
+     * @param how -> descending or ascending
+     * @return the correct options as an array.
+     */
     private String[] defineOptions(String what, String sortBy, String how) {
 
         String[] options = new String[6];
@@ -122,6 +186,10 @@ public class UserInterface {
         return options;
     }
 
+    /**
+     * Offer options to re-arrange the list of items - display at the bottom of it.
+     * @param options -> options to display
+     */
     private void displayOptions(String[] options) {
 
         System.out.println("\n ------------------------------------ \nOptions : ");
@@ -140,8 +208,10 @@ public class UserInterface {
         System.out.println("\n");
     }
 
+
     /**
-     * Ugly, can we remove those 3 almost similar case ?
+     * Dispatch the correct displaying of user items, regarding his choices.
+     * Ugly, can we remove/arrange those 3 almost similar case ?
      * @param what -> What are we displaying ? all, only expenses or only incomes
      * @param sortBy -> Sort by ? month, title or amount
      * @param how -> descending or ascending
@@ -217,13 +287,20 @@ public class UserInterface {
         }
     }
 
-    // -------------------------------- Utils ---------------------------------
+
+
+
+    // =============================================================================================
+    // -------------------------------- UI display - Utils -----------------------------------------
+    // =============================================================================================
 
     /**
-     * Return an integer in the range asked. Ask again if not in range.
-     * Throw exception if not an Integer.
+     * Get an integer input from user. Ask again if not in range. Throw exception if not an Integer.
+     * @param min  lowest possible int
+     * @param max  highest possible int
+     * @return User input Integer
      */
-    private int getExpectedInput(int min, int max) {
+    private int getExpectedInteger(int min, int max) {
         int input;
 
         do {
@@ -241,6 +318,32 @@ public class UserInterface {
 
         } while (input > max || input < min);
 
+        return input;
+    }
+
+    /**
+     * Get an String input from userAsk again if not in range. Do we need an exception here ??
+     * @param minLength  lowest possible length
+     * @param maxLength  highest possible length
+     * @return User input string
+     */
+    private String getExpectedString(int minLength, int maxLength) {
+
+        String input = this.scan.nextLine();
+        // First scan here is not take in count
+        // Java consider our "/n" or "" coming from previous one as input
+
+        while (input.length() > maxLength || input.length() < minLength){
+
+            System.out.print("->");
+            // Need some try catch or not ??
+            input = this.scan.nextLine();
+
+            if (input.length() > maxLength || input.length() < minLength){
+                System.out.println("Please enter a string between " + minLength + " and " + maxLength + " characters.");
+            }
+
+        }
         return input;
     }
 }
