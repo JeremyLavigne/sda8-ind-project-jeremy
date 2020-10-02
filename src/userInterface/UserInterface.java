@@ -30,7 +30,12 @@ public class UserInterface {
         System.out.println("You have currently " + this.account.getBalance() + " kr on your account.");
 
         this.offerOptions();
+    }
 
+    /**
+     * End user interface
+     */
+    private void stop() {
         this.scan.close();
     }
 
@@ -147,8 +152,8 @@ public class UserInterface {
     private void saveAndQuit() {
         System.out.println("\n ------------------------------------ \n");
         System.out.println("Saved ! \n\nGood Bye :-)");
+        this.stop();
     }
-
 
 
 
@@ -332,7 +337,7 @@ public class UserInterface {
         System.out.println("Month : (0) Current month - (1) January - (2) February - ... -> ");
         int inputMonth = getExpectedInteger(0, 12);
 
-        // Need to add the line Number -> useful for editing
+        // Need to add the line Number (something like an id) -> useful for editing
         System.out.println("This object will be created : " +
                 inputType + " - " + inputTitle + " - " + inputAmount + " - " + inputMonth + ".");
     }
