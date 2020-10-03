@@ -14,6 +14,18 @@ public class Item {
         this.month = itemMonth;
     }
 
+    public int getAmount() {
+        return amount;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
     @Override
     /**
      * Return only month here, the rest is managed by subclasses

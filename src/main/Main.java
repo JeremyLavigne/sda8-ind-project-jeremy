@@ -24,7 +24,7 @@ public class Main {
         userAccount.addItem(new Expense(1230, "blah", 2));
         userAccount.addItem(new Income(76399, "testwithalongline", 12));
 
-        userAccount.printList();
+        userAccount.printItems("Only Expenses", "Month", "Ascending");
 
 
         //UserInterface ui = new UserInterface(userAccount);

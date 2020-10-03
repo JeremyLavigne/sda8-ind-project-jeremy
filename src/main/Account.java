@@ -1,6 +1,8 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * This class represents one user account.
@@ -26,20 +28,154 @@ public class Account {
         this.items.add(item);
     }
 
-    // Should be inside ShowItems (what, hoz, ..)
-    // Should use a list as a parameter
-    // Never actually need to print the original list
-    public void printList() {
-        for (int i = 0 ; i < this.items.size(); i ++) {
-            System.out.println((i+1) + " - " + items.get(i));
-        }
-    }
     // Update item
     // Check if empty list
 
     // remove item
     // Check if empty list
 
-    // Display items (what, sortby, how)
-    // Create a local list we can map/reduce/sort, ... and display
+
+
+    /**
+     * Dispatch the correct displaying of user items, regarding his choices.
+     * Quite long method : 3*2*2 = 12 different cases
+     * @param what -> What are we displaying ? 'All', 'Only expenses' or 'Only incomes'
+     * @param sortBy -> Sort by ? 'Month', 'Title' or 'Amount'
+     * @param how -> 'Descending' or 'Ascending'
+     */
+    public void printItems(String what, String sortBy, String how) {
+
+        // Empty list : will receive the an already ordered list regarding parameters
+        List<Item> listToPrint = new ArrayList<>();
+
+        switch (what) {
+            case "All" :
+                if (sortBy.equals("Month")) {
+                    if (how.equals("Descending")) {
+                        listToPrint = this.items.stream()
+                                .sorted((i1,i2)-> Integer.compare(i1.getMonth(), i2.getMonth()))
+                                .collect(Collectors.toList());
+                    } else {
+                        listToPrint = this.items.stream()
+                                .sorted((i1,i2)-> Integer.compare(i2.getMonth(), i1.getMonth()))
+                                .collect(Collectors.toList());
+                    }
+                } else if (sortBy.equals("Title")){
+                    if (how.equals("Descending")) {
+                        listToPrint = this.items.stream()
+                                .sorted((i1,i2)-> CharSequence.compare(i1.getTitle(), i2.getTitle()))
+                                .collect(Collectors.toList());
+                    } else {
+                        listToPrint = this.items.stream()
+                                .sorted((i1,i2)-> CharSequence.compare(i2.getTitle(), i1.getTitle()))
+                                .collect(Collectors.toList());
+                    }
+                } else {
+                    if (how.equals("Descending")) {
+                        listToPrint = this.items.stream()
+                                .sorted((i1,i2)-> Integer.compare(i1.getAmount(), i2.getAmount()))
+                                .collect(Collectors.toList());
+                    } else {
+                        listToPrint = this.items.stream()
+                                .sorted((i1,i2)-> Integer.compare(i2.getAmount(), i1.getAmount()))
+                                .collect(Collectors.toList());
+                    }
+                }
+                break;
+            case "Only Expenses" :
+                if (sortBy.equals("Month")) {
+                    if (how.equals("Descending")) {
+                        listToPrint = this.items.stream()
+                                .filter(item -> item.getAmount() < 0)
+                                .sorted((i1,i2)-> Integer.compare(i1.getMonth(), i2.getMonth()))
+                                .collect(Collectors.toList());
+                    } else {
+                        listToPrint = this.items.stream()
+                                .filter(item -> item.getAmount() < 0)
+                                .sorted((i1,i2)-> Integer.compare(i2.getMonth(), i1.getMonth()))
+                                .collect(Collectors.toList());
+                    }
+                } else if (sortBy.equals("Title")){
+                    if (how.equals("Descending")) {
+                        listToPrint = this.items.stream()
+                                .filter(item -> item.getAmount() < 0)
+                                .sorted((i1,i2)-> CharSequence.compare(i1.getTitle(), i2.getTitle()))
+                                .collect(Collectors.toList());
+                    } else {
+                        listToPrint = this.items.stream()
+                                .filter(item -> item.getAmount() < 0)
+                                .sorted((i1,i2)-> CharSequence.compare(i2.getTitle(), i1.getTitle()))
+                                .collect(Collectors.toList());
+                    }
+                } else {
+                    if (how.equals("Descending")) {
+                        listToPrint = this.items.stream()
+                                .filter(item -> item.getAmount() < 0)
+                                .sorted((i1,i2)-> Integer.compare(i1.getAmount(), i2.getAmount()))
+                                .collect(Collectors.toList());
+                    } else {
+                        listToPrint = this.items.stream()
+                                .filter(item -> item.getAmount() < 0)
+                                .sorted((i1,i2)-> Integer.compare(i2.getAmount(), i1.getAmount()))
+                                .collect(Collectors.toList());
+                    }
+                }
+                break;
+            case "Only Incomes" :
+                if (sortBy.equals("Month")) {
+                    if (how.equals("Descending")) {
+                        listToPrint = this.items.stream()
+                                .filter(item -> item.getAmount() > 0)
+                                .sorted((i1,i2)-> Integer.compare(i1.getMonth(), i2.getMonth()))
+                                .collect(Collectors.toList());
+                    } else {
+                        listToPrint = this.items.stream()
+                                .filter(item -> item.getAmount() > 0)
+                                .sorted((i1,i2)-> Integer.compare(i2.getMonth(), i1.getMonth()))
+                                .collect(Collectors.toList());
+                    }
+                } else if (sortBy.equals("Title")){
+                    if (how.equals("Descending")) {
+                        listToPrint = this.items.stream()
+                                .filter(item -> item.getAmount() > 0)
+                                .sorted((i1,i2)-> CharSequence.compare(i1.getTitle(), i2.getTitle()))
+                                .collect(Collectors.toList());
+                    } else {
+                        listToPrint = this.items.stream()
+                                .filter(item -> item.getAmount() > 0)
+                                .sorted((i1,i2)-> CharSequence.compare(i2.getTitle(), i1.getTitle()))
+                                .collect(Collectors.toList());
+                    }
+                } else {
+                    if (how.equals("Descending")) {
+                        listToPrint = this.items.stream()
+                                .filter(item -> item.getAmount() > 0)
+                                .sorted((i1,i2)-> Integer.compare(i1.getAmount(), i2.getAmount()))
+                                .collect(Collectors.toList());
+                    } else {
+                        listToPrint = this.items.stream()
+                                .filter(item -> item.getAmount() > 0)
+                                .sorted((i1,i2)-> Integer.compare(i2.getAmount(), i1.getAmount()))
+                                .collect(Collectors.toList());
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+
+        System.out.println("\n ------------------------------------\n ");
+        printList(listToPrint);
+
+    }
+
+    /**
+     * Display the list in parameter - and index as a line number
+     * @param listToPrint -> Actual list to print
+     */
+    public void printList(List<Item> listToPrint) {
+        for (int i = 0 ; i < listToPrint.size(); i ++) {
+            System.out.println((i+1) + " - " + listToPrint.get(i));
+        }
+    }
 }

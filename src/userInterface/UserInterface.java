@@ -27,6 +27,7 @@ public class UserInterface {
     public void start() {
 
         System.out.println("\nWelcome to TrackMoney.");
+        // Right here, Balance can only be seen once, at the beginning, bad ?
         System.out.println("You have currently " + this.account.getBalance() + " kr on your account.");
 
         this.offerOptions();
@@ -70,18 +71,21 @@ public class UserInterface {
 
     /**
      * Choice n°1 - Show user items already in file
+     *   @param what -> What are we displaying ? 'All', 'Only expenses' or 'Only incomes'
+     *   @param sortBy -> Sort by ? 'Month', 'Title' or 'Amount'
+     *   @param how -> 'Descending' or 'Ascending'
      */
     private void showItemsPicked(String what, String sortBy, String how) {
 
-        displayAskedItems(what, sortBy, how);
+        this.account.printItems(what, sortBy, how);
 
+        // Menu to re-arrange display
         String[] options = defineOptions(what, sortBy, how);
-
         displayOptions(options);
 
-        int input = getExpectedInteger(1,6);
+        int inputMenu = getExpectedInteger(1,6); // User choice in the below menu
 
-        switch (input) {
+        switch (inputMenu) {
             case 1 : this.showItemsPicked(options[0], sortBy, how); break;
             case 2 : this.showItemsPicked(options[1], sortBy, how); break;
             case 3 : this.showItemsPicked(what, options[2], how); break;
@@ -92,6 +96,7 @@ public class UserInterface {
         }
 
     }
+
     /**
      * Choice n°2 - Add a new item
      */
@@ -118,7 +123,8 @@ public class UserInterface {
      */
     private void editItemPicked() {
 
-        this.displayAskedItems("All", "Month", "Descending");
+        //this.displayAskedItems("All", "Month", "Descending");
+        this.account.printItems("All", "Month", "Descending");
 
         System.out.println("\n ------------------------------------ \n");
         System.out.println("Please enter the line number that you want to edit/remove");
@@ -162,11 +168,10 @@ public class UserInterface {
     // =============================================================================================
 
     /**
-     * Define options regarding the current user choice.
-     * Avoid duplication : we do not offer the current displaying
-     * @param what -> What are we displaying ? all, only expenses or only incomes
-     * @param sortBy -> Sort by ? month, title or amount
-     * @param how -> descending or ascending
+     * Define options regarding the current user choice. Avoid duplication : we do not offer the current displaying
+     * @param what -> What are we displaying ? 'All', 'Only expenses' or 'Only incomes'
+     * @param sortBy -> Sort by ? 'Month', 'Title' or 'Amount'
+     * @param how -> 'Descending' or 'Ascending'
      * @return the correct options as an array.
      */
     private String[] defineOptions(String what, String sortBy, String how) {
@@ -222,85 +227,6 @@ public class UserInterface {
         }
 
         System.out.println("\n");
-    }
-
-
-    /**
-     * Dispatch the correct displaying of user items, regarding his choices.
-     * Ugly, can we remove/arrange those 3 almost similar case ?
-     * @param what -> What are we displaying ? all, only expenses or only incomes
-     * @param sortBy -> Sort by ? month, title or amount
-     * @param how -> descending or ascending
-     */
-    private void displayAskedItems(String what, String sortBy, String how) {
-        System.out.println("\n ------------------------------------\n ");
-        switch (what) {
-            case "All" :
-                if (sortBy.equals("Month")) {
-                    if (how.equals("Descending")) {
-                        System.out.println(" - all month descending - ");
-                    } else {
-                        System.out.println(" - all month ascending - ");
-                    }
-                } else if (sortBy.equals("Title")){
-                    if (how.equals("Descending")) {
-                        System.out.println(" - all title descending - ");
-                    } else {
-                        System.out.println(" - all title ascending - ");
-                    }
-                } else {
-                    if (how.equals("Descending")) {
-                        System.out.println(" - all amount descending - ");
-                    } else {
-                        System.out.println(" - all amount ascending - ");
-                    }
-                }
-                break;
-            case "Only Expenses" :
-                if (sortBy.equals("Month")) {
-                    if (how.equals("Descending")) {
-                        System.out.println(" - only expenses month descending - ");
-                    } else {
-                        System.out.println(" - only expenses month ascending - ");
-                    }
-                } else if (sortBy.equals("Title")){
-                    if (how.equals("Descending")) {
-                        System.out.println(" - only expenses title descending - ");
-                    } else {
-                        System.out.println(" - only expenses title ascending - ");
-                    }
-                } else {
-                    if (how.equals("Descending")) {
-                        System.out.println(" - only expenses amount descending - ");
-                    } else {
-                        System.out.println(" - only expenses amount ascending - ");
-                    }
-                }
-                break;
-            case "Only Incomes" :
-                if (sortBy.equals("Month")) {
-                    if (how.equals("Descending")) {
-                        System.out.println(" - only incomes month descending - ");
-                    } else {
-                        System.out.println(" - only incomes month ascending - ");
-                    }
-                } else if (sortBy.equals("Title")){
-                    if (how.equals("Descending")) {
-                        System.out.println(" - only incomes title descending - ");
-                    } else {
-                        System.out.println(" - only incomes title ascending - ");
-                    }
-                } else {
-                    if (how.equals("Descending")) {
-                        System.out.println(" - only incomes amount descending - ");
-                    } else {
-                        System.out.println(" - only incomes amount ascending - ");
-                    }
-                }
-                break;
-            default:
-                break;
-        }
     }
 
 
