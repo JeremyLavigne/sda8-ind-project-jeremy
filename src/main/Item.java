@@ -1,12 +1,13 @@
 package main;
 
 /**
+ * One item - Amount/Title/Month
  * Can be either Expense or Income
  */
 public class Item {
     protected int amount;
     protected String title;
-    protected int month;
+    protected int month; // Month is taken as an integer for sorting, used as a String for displaying
 
     public Item(int itemAmount, String itemTitle, int itemMonth){
         this.amount = itemAmount;
@@ -26,13 +27,15 @@ public class Item {
         return title;
     }
 
-    @Override
-    /**
-     * Return only month here, the rest is managed by subclasses
-     */
-    public String toString() {
+    public String getType() {
+        if (this.getAmount() < 0) {
+            return "Expense";
+        }
+        return "Income";
+    }
 
-        switch (month) {
+    public String getStringMonth() {
+        switch (this.getMonth()) {
             case 1 : return "January";
             case 2 : return "February";
             case 3 : return "March";
@@ -48,4 +51,13 @@ public class Item {
             default: return "Unknown";
         }
     }
+
+    @Override
+    /**
+     * Return only month here, the rest is managed by subclasses
+     */
+    public String toString() {
+        return getStringMonth();
+    }
+
 }

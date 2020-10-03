@@ -24,12 +24,10 @@ public class Main {
         userAccount.addItem(new Expense(1230, "blah", 2));
         userAccount.addItem(new Income(76399, "testwithalongline", 12));
 
-        userAccount.printItems("Only Expenses", "Month", "Ascending");
 
+        UserInterface ui = new UserInterface(userAccount);
 
-        //UserInterface ui = new UserInterface(userAccount);
-
-        //ui.start();
+        ui.start();
 
         // Could save file here and not in the user interface
         // ui.stop() -> go back here and save

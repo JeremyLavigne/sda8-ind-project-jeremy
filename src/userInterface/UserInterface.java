@@ -1,6 +1,10 @@
 package userInterface;
 
 import main.Account;
+import main.Expense;
+import main.Income;
+import main.Item;
+
 import java.util.Scanner;
 
 
@@ -104,13 +108,14 @@ public class UserInterface {
         System.out.println("\n ------------------------------------ \n");
         System.out.println("Please enter new item details :");
 
-        this.newItemForm(); // Should return object
+        Item newItem = this.newItemForm("", "", 0, "");
 
         System.out.println("(1) Save - (2) Erase and restart");
         int inputSaveOrNot = getExpectedInteger(1,2);
 
         if (inputSaveOrNot == 1) {
             System.out.println("Saved!");
+            this.account.addItem(newItem);
             this.offerOptions();
         } else {
             System.out.println("Current item deleted.");
@@ -123,21 +128,29 @@ public class UserInterface {
      */
     private void editItemPicked() {
 
-        //this.displayAskedItems("All", "Month", "Descending");
-        this.account.printItems("All", "Month", "Descending");
+        int numberOfLines = this.account.getItemsSize();
+        if (numberOfLines == 0) {
+            System.out.println("There is nothing to edit.");
+            this.offerOptions();
+            return;
+        }
+
+        // Print list in original order - need to match line number & index in list
+        this.account.printList(this.account.getItems());
 
         System.out.println("\n ------------------------------------ \n");
         System.out.println("Please enter the line number that you want to edit/remove");
 
-        int lineNumberToEdit = getExpectedInteger(1,12); // 12 should be replace by the length of array
+        int lineNumberToEdit = getExpectedInteger(1, numberOfLines);
 
         System.out.println("\nDo you want (1) Edit or (2) Remove : ");
         int inputChoice = getExpectedInteger(1, 2);
 
         if (inputChoice == 1) {
-            this.editLine(lineNumberToEdit); // Will use the actual object here, not just the line number
+            this.editLine(lineNumberToEdit - 1); // parameter = index in items list
             System.out.println("Line " + lineNumberToEdit + " was successfully edited.");
         } else {
+            this.account.removeItem(lineNumberToEdit -1);
             System.out.println("Line " + lineNumberToEdit + " was successfully removed.");
         }
 
@@ -236,37 +249,60 @@ public class UserInterface {
 
     /**
      * Method to edit one line. Should we use the line number as an index of ArrayList ?
-     * @param lineNumberToEdit -> Object to edit (Title - Amount - Month)
+     * @param index -> index of item to edit
      */
-    private void editLine(int lineNumberToEdit) {
+    private void editLine(int index) {
 
-        this.newItemForm(); // Should return object
+        // Get the previous data from item to re-use them as default values in form
+        String currentType = this.account.getItems().get(index).getType();
+        String currentTitle = this.account.getItems().get(index).getTitle();
+        int currentAmount = this.account.getItems().get(index).getAmount();
+        String currentMonth = this.account.getItems().get(index).getStringMonth();
 
-        // Update : ..replace(lineNumber, new object)
+        Item updatedItem = this.newItemForm(currentType, currentTitle, currentAmount, currentMonth);
+
+        this.account.updateItem(index, updatedItem);
 
     }
 
     /**
-     * Could take default values in parameters,
-     * and print it as a default value when editing: "Title (my old value)"
+     * Form to create/update an item. Default values in parameters (for editing)
+     * @param currentAmount -> amount default value
+     * @param currentTitle -> title default value
+     * @param currentMonth -> month default value (as a string)
+     * @param currentType -> type default value
      */
-    private void newItemForm() {
+    private Item newItemForm(String currentType, String currentTitle, int currentAmount, String currentMonth) {
+
         System.out.println("Type : (1) Expense - (2) Income :");
+        System.out.print(currentType.equals("") ? "" : "(Currently : " + currentType + ")");
         int inputType = getExpectedInteger(1,2);
 
         System.out.println("Title :");
+        System.out.print(currentTitle.equals("") ? "" : "(Currently : " +  currentTitle + ")");
         String inputTitle = getExpectedString(3, 20);
 
         System.out.println("Amount : ");
+        System.out.print(currentAmount == 0 ? "" : "(Currently : " +
+                (currentAmount > 0 ? currentAmount : -currentAmount) + ")");
         int inputAmount = getExpectedInteger(0, 10000000);
 
         System.out.println("Month : (0) Current month - (1) January - (2) February - ... -> ");
+        System.out.print(currentMonth.equals("") ? "" : "(Currently : " +  currentMonth + ")");
         int inputMonth = getExpectedInteger(0, 12);
 
-        // Need to add the line Number (something like an id) -> useful for editing
-        System.out.println("This object will be created : " +
-                inputType + " - " + inputTitle + " - " + inputAmount + " - " + inputMonth + ".");
+        System.out.println("This object will be " +
+                (currentTitle.equals("") ? "created : " : "updated as : " )+
+                (inputType == 1 ? "New expense : " : "New expense : " )
+                + inputTitle + " - " + inputAmount + "Sek - Month(" + inputMonth + ").");
+
+        if (inputType == 1) {
+            return new Expense(inputAmount, inputTitle, inputMonth);
+        } else {
+            return new Income(inputAmount, inputTitle, inputMonth);
+        }
     }
+
 
 
     // =============================================================================================

@@ -23,17 +23,30 @@ public class Account {
         return this.balance;
     }
 
-    // Add item
+    public List<Item> getItems() {
+        return this.items;
+    }
+
+    public int getItemsSize() {
+        return this.items.size();
+    }
+
     public void addItem(Item item) {
         this.items.add(item);
     }
 
-    // Update item
-    // Check if empty list
+    public void updateItem(int index, Item updatedItem) {
+        this.items.set(index, updatedItem);
+    }
 
-    // remove item
-    // Check if empty list
-
+    /**
+     * Remove one item from the list
+     * @param index -> index of item to remove
+     */
+    public void removeItem(int index) {
+        // No need to check if empty list or index out of bounds, already done before.
+        this.items.remove(index);
+    }
 
 
     /**
@@ -178,4 +191,5 @@ public class Account {
             System.out.println((i+1) + " - " + listToPrint.get(i));
         }
     }
+
 }
