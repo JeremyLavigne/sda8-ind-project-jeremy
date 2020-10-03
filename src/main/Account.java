@@ -22,10 +22,23 @@ public class Account {
     }
 
     // Add item
+    public void addItem(Item item) {
+        this.items.add(item);
+    }
 
+    // Should be inside ShowItems (what, hoz, ..)
+    // Should use a list as a parameter
+    // Never actually need to print the original list
+    public void printList() {
+        for (int i = 0 ; i < this.items.size(); i ++) {
+            System.out.println((i+1) + " - " + items.get(i));
+        }
+    }
     // Update item
+    // Check if empty list
 
     // remove item
+    // Check if empty list
 
     // Display items (what, sortby, how)
     // Create a local list we can map/reduce/sort, ... and display
