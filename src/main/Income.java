@@ -1,9 +1,8 @@
 package main;
 
 /**
- * This class represent one income and all its details :
- * Amount(positive) - title - month
- * almost Similar to Expense, extends abstract class ?
+ * This class represent one income.
+ * Is it really necessary ?
  */
 public class Income extends Item {
 

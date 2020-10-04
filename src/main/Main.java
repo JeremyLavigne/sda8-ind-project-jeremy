@@ -1,6 +1,10 @@
 package main;
 
+import database.Database;
 import userInterface.UserInterface;
+
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
 
 /**
  * Entry point of the program
@@ -9,16 +13,28 @@ public class Main {
 
     public static void main(String[] args){
 
-        // getfromfile(myfile)
-        // Account = get account from the saved file
+        // Get List of Item from database
+        Database myDatabase = new Database("assets/database.txt");
 
-        Account userAccount = new Account();
+        ArrayList<Item> savedList = new ArrayList<>();
+        try {
+            savedList = myDatabase.getListFromFile();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        // Create account
+        Account userAccount = new Account(savedList);
+
+        // Launch Interface
         UserInterface ui = new UserInterface(userAccount);
-
         ui.start();
 
-        // Could save file here and not in the user interface
-        // ui.stop() -> go back here and save
-        // saveinfile(myfile)
+        // Save List of item
+        try {
+            myDatabase.writeListIntoFile(userAccount.getItems());
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }
