@@ -1,3 +1,2 @@
-Expense;Example 1;-1000;1
+Income;Example 1;1000;1
 Income;Example 2;1000;2
-

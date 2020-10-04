@@ -1,22 +1,20 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * This class represents one user account.
- * Should we use Arraylist ? easier to deal with, sort, etc..
- * Should we use HashMap ? Can be interesting when editing.
- * two separate lists expenses - income ? arrayList<Item> items ?
  */
 public class Account {
-    private int balance;
-    private ArrayList<Item> items;
+    private final int balance; // Will not stay final
+    private final ArrayList<Item> items;
 
-    public Account() {
-        this.balance = 0;
-        this.items = new ArrayList<>();
+    public Account(ArrayList<Item> initialList) {
+        this.balance = 0; // Should be calculated using initial List
+        this.items = initialList;
     }
 
     public int getBalance() {
@@ -66,7 +64,7 @@ public class Account {
                 if (sortBy.equals("Month")) {
                     if (how.equals("Descending")) {
                         listToPrint = this.items.stream()
-                                .sorted((i1,i2)-> Integer.compare(i1.getMonth(), i2.getMonth()))
+                                .sorted(Comparator.comparingInt(Item::getMonth))
                                 .collect(Collectors.toList());
                     } else {
                         listToPrint = this.items.stream()
@@ -86,7 +84,7 @@ public class Account {
                 } else {
                     if (how.equals("Descending")) {
                         listToPrint = this.items.stream()
-                                .sorted((i1,i2)-> Integer.compare(i1.getAmount(), i2.getAmount()))
+                                .sorted(Comparator.comparingInt(Item::getAmount))
                                 .collect(Collectors.toList());
                     } else {
                         listToPrint = this.items.stream()
@@ -100,7 +98,7 @@ public class Account {
                     if (how.equals("Descending")) {
                         listToPrint = this.items.stream()
                                 .filter(item -> item.getAmount() < 0)
-                                .sorted((i1,i2)-> Integer.compare(i1.getMonth(), i2.getMonth()))
+                                .sorted(Comparator.comparingInt(Item::getMonth))
                                 .collect(Collectors.toList());
                     } else {
                         listToPrint = this.items.stream()
@@ -124,7 +122,7 @@ public class Account {
                     if (how.equals("Descending")) {
                         listToPrint = this.items.stream()
                                 .filter(item -> item.getAmount() < 0)
-                                .sorted((i1,i2)-> Integer.compare(i1.getAmount(), i2.getAmount()))
+                                .sorted(Comparator.comparingInt(Item::getAmount))
                                 .collect(Collectors.toList());
                     } else {
                         listToPrint = this.items.stream()
@@ -139,7 +137,7 @@ public class Account {
                     if (how.equals("Descending")) {
                         listToPrint = this.items.stream()
                                 .filter(item -> item.getAmount() > 0)
-                                .sorted((i1,i2)-> Integer.compare(i1.getMonth(), i2.getMonth()))
+                                .sorted(Comparator.comparingInt(Item::getMonth))
                                 .collect(Collectors.toList());
                     } else {
                         listToPrint = this.items.stream()
@@ -163,7 +161,7 @@ public class Account {
                     if (how.equals("Descending")) {
                         listToPrint = this.items.stream()
                                 .filter(item -> item.getAmount() > 0)
-                                .sorted((i1,i2)-> Integer.compare(i1.getAmount(), i2.getAmount()))
+                                .sorted(Comparator.comparingInt(Item::getAmount))
                                 .collect(Collectors.toList());
                     } else {
                         listToPrint = this.items.stream()
