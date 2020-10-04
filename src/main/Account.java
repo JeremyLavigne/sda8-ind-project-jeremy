@@ -7,18 +7,27 @@ import java.util.stream.Collectors;
 
 /**
  * This class represents one user account.
+ * One single field -> List of item (expense or income)
  */
 public class Account {
-    private final int balance; // Will not stay final
     private final ArrayList<Item> items;
 
     public Account(ArrayList<Item> initialList) {
-        this.balance = 0; // Should be calculated using initial List
         this.items = initialList;
     }
 
+    // Calculate balance using all item amount inside current list of items
     public int getBalance() {
-        return this.balance;
+        int incomeSum = this.items.stream()
+                .filter(item -> item.getType().equals("Income"))
+                .map(Item::getAmount)
+                .reduce(0, (sum, previous) -> sum += previous);
+        int expenseSum = this.items.stream()
+                .filter(item -> item.getType().equals("Expense"))
+                .map(Item::getAmount)
+                .reduce(0, (sum, previous) -> sum += previous);
+
+        return incomeSum - expenseSum;
     }
 
     public List<Item> getItems() {
@@ -33,16 +42,11 @@ public class Account {
         this.items.add(item);
     }
 
+    // No need to check if empty list or index out of bounds, already done before.
     public void updateItem(int index, Item updatedItem) {
         this.items.set(index, updatedItem);
     }
-
-    /**
-     * Remove one item from the list
-     * @param index -> index of item to remove
-     */
     public void removeItem(int index) {
-        // No need to check if empty list or index out of bounds, already done before.
         this.items.remove(index);
     }
 
@@ -97,36 +101,36 @@ public class Account {
                 if (sortBy.equals("Month")) {
                     if (how.equals("Descending")) {
                         listToPrint = this.items.stream()
-                                .filter(item -> item.getAmount() < 0)
+                                .filter(item -> item.getType().equals("Expense"))
                                 .sorted(Comparator.comparingInt(Item::getMonth))
                                 .collect(Collectors.toList());
                     } else {
                         listToPrint = this.items.stream()
-                                .filter(item -> item.getAmount() < 0)
+                                .filter(item -> item.getType().equals("Expense"))
                                 .sorted((i1,i2)-> Integer.compare(i2.getMonth(), i1.getMonth()))
                                 .collect(Collectors.toList());
                     }
                 } else if (sortBy.equals("Title")){
                     if (how.equals("Descending")) {
                         listToPrint = this.items.stream()
-                                .filter(item -> item.getAmount() < 0)
+                                .filter(item -> item.getType().equals("Expense"))
                                 .sorted((i1,i2)-> CharSequence.compare(i1.getTitle(), i2.getTitle()))
                                 .collect(Collectors.toList());
                     } else {
                         listToPrint = this.items.stream()
-                                .filter(item -> item.getAmount() < 0)
+                                .filter(item -> item.getType().equals("Expense"))
                                 .sorted((i1,i2)-> CharSequence.compare(i2.getTitle(), i1.getTitle()))
                                 .collect(Collectors.toList());
                     }
                 } else {
                     if (how.equals("Descending")) {
                         listToPrint = this.items.stream()
-                                .filter(item -> item.getAmount() < 0)
+                                .filter(item -> item.getType().equals("Expense"))
                                 .sorted(Comparator.comparingInt(Item::getAmount))
                                 .collect(Collectors.toList());
                     } else {
                         listToPrint = this.items.stream()
-                                .filter(item -> item.getAmount() < 0)
+                                .filter(item -> item.getType().equals("Expense"))
                                 .sorted((i1,i2)-> Integer.compare(i2.getAmount(), i1.getAmount()))
                                 .collect(Collectors.toList());
                     }
@@ -136,36 +140,36 @@ public class Account {
                 if (sortBy.equals("Month")) {
                     if (how.equals("Descending")) {
                         listToPrint = this.items.stream()
-                                .filter(item -> item.getAmount() > 0)
+                                .filter(item -> item.getType().equals("Income"))
                                 .sorted(Comparator.comparingInt(Item::getMonth))
                                 .collect(Collectors.toList());
                     } else {
                         listToPrint = this.items.stream()
-                                .filter(item -> item.getAmount() > 0)
+                                .filter(item -> item.getType().equals("Income"))
                                 .sorted((i1,i2)-> Integer.compare(i2.getMonth(), i1.getMonth()))
                                 .collect(Collectors.toList());
                     }
                 } else if (sortBy.equals("Title")){
                     if (how.equals("Descending")) {
                         listToPrint = this.items.stream()
-                                .filter(item -> item.getAmount() > 0)
+                                .filter(item -> item.getType().equals("Income"))
                                 .sorted((i1,i2)-> CharSequence.compare(i1.getTitle(), i2.getTitle()))
                                 .collect(Collectors.toList());
                     } else {
                         listToPrint = this.items.stream()
-                                .filter(item -> item.getAmount() > 0)
+                                .filter(item -> item.getType().equals("Income"))
                                 .sorted((i1,i2)-> CharSequence.compare(i2.getTitle(), i1.getTitle()))
                                 .collect(Collectors.toList());
                     }
                 } else {
                     if (how.equals("Descending")) {
                         listToPrint = this.items.stream()
-                                .filter(item -> item.getAmount() > 0)
+                                .filter(item -> item.getType().equals("Income"))
                                 .sorted(Comparator.comparingInt(Item::getAmount))
                                 .collect(Collectors.toList());
                     } else {
                         listToPrint = this.items.stream()
-                                .filter(item -> item.getAmount() > 0)
+                                .filter(item -> item.getType().equals("Income"))
                                 .sorted((i1,i2)-> Integer.compare(i2.getAmount(), i1.getAmount()))
                                 .collect(Collectors.toList());
                     }

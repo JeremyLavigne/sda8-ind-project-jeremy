@@ -1,7 +1,5 @@
 package database;
 
-import main.Expense;
-import main.Income;
 import main.Item;
 
 import java.io.File;
@@ -12,7 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 /**
- * This class mocks a database: read and write the list of items (expense/income)
+ * This class mocks a database: read and write the list of items
  * Only read once at first and write once at the end.
  */
 public class Database {
@@ -34,17 +32,16 @@ public class Database {
         while (scan.hasNext()) {
             String[] splitLine = scan.nextLine().split(";");
 
-            if (splitLine[0].equals("Income")){
-                list.add(new Income(Integer.parseInt(splitLine[2]), splitLine[1], Integer.parseInt(splitLine[3])));
-            } else {
-                list.add(new Expense(Integer.parseInt(splitLine[2]), splitLine[1], Integer.parseInt(splitLine[3])));
-            }
-
+            list.add(new Item(splitLine[0], // Type
+                    splitLine[1], // Title
+                    Integer.parseInt(splitLine[2]),  // Amount
+                    Integer.parseInt(splitLine[3]))  // Month
+            );
         }
-
         scan.close();
         return list;
     }
+
 
     /**
      * Save the list in the database.

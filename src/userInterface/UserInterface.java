@@ -1,8 +1,6 @@
 package userInterface;
 
 import main.Account;
-import main.Expense;
-import main.Income;
 import main.Item;
 
 import java.util.Scanner;
@@ -31,9 +29,6 @@ public class UserInterface {
     public void start() {
 
         System.out.println("\nWelcome to TrackMoney.");
-        // Right here, Balance can only be seen once, at the beginning, bad ?
-        System.out.println("You have currently " + this.account.getBalance() + " kr on your account.");
-
         this.offerOptions();
     }
 
@@ -55,6 +50,7 @@ public class UserInterface {
     private void offerOptions() {
 
         System.out.println("---------------------------------------");
+        System.out.println("You have currently " + this.account.getBalance() + " kr on your account.");
         System.out.println("\nPick an option :\n" +
                 "(1) Show items (All / Expense(s) / Income(s)), \n" +
                 "(2) Add new expense / income, \n" +
@@ -277,14 +273,14 @@ public class UserInterface {
         System.out.println("Type : (1) Expense - (2) Income :");
         System.out.print(currentType.equals("") ? "" : "(Currently : " + currentType + ")");
         int inputType = getExpectedInteger(1,2);
+        String type = (inputType == 1 ? "Expense" : "Income" );
 
         System.out.println("Title :");
         System.out.print(currentTitle.equals("") ? "" : "(Currently : " +  currentTitle + ")");
         String inputTitle = getExpectedString(3, 20);
 
         System.out.println("Amount : ");
-        System.out.print(currentAmount == 0 ? "" : "(Currently : " +
-                (currentAmount > 0 ? currentAmount : -currentAmount) + ")");
+        System.out.print(currentAmount == 0 ? "" : "(Currently : " + currentAmount + ")");
         int inputAmount = getExpectedInteger(0, 10000000);
 
         System.out.println("Month : (0) Current month - (1) January - (2) February - ... -> ");
@@ -292,15 +288,12 @@ public class UserInterface {
         int inputMonth = getExpectedInteger(0, 12);
 
         System.out.println("This object will be " +
-                (currentTitle.equals("") ? "created : " : "updated as : " )+
-                (inputType == 1 ? "New expense : " : "New expense : " )
-                + inputTitle + " - " + inputAmount + "Sek - Month(" + inputMonth + ").");
+                (currentTitle.equals("") ? "created : " : "updated as : " ) +
+                type + ": " + inputTitle + " - " + inputAmount + "Sek - Month(" + inputMonth + ").");
 
-        if (inputType == 1) {
-            return new Expense(inputAmount, inputTitle, inputMonth);
-        } else {
-            return new Income(inputAmount, inputTitle, inputMonth);
-        }
+
+        return new Item(type, inputTitle, inputAmount, inputMonth);
+
     }
 
 
