@@ -303,30 +303,36 @@ public class UserInterface {
     // =============================================================================================
 
     /**
-     * Get an integer input from user. Ask again if not in range. Throw exception if not an Integer.
+     * Get an integer input from user. Ask again if not in range.
+     * Prevent user mistake if String is entered.
      * @param min  lowest possible int
      * @param max  highest possible int
      * @return User input Integer
      */
     private int getExpectedInteger(int min, int max) {
-        int input;
+        String input;
+        int userChoice = -1;
 
         do {
             System.out.print("->");
 
             try {
-                input = this.scan.nextInt();
+                input = this.scan.next(); // Take input as a String to prevent app crash
+                userChoice = Integer.parseInt(input);
+
             } catch (Exception e) {
-                throw new IllegalArgumentException("We are expecting an integer here.");
+                System.out.println("We are expecting an integer.");
+                // Is it necessary to throw exception here ?
+                //throw new IllegalArgumentException("We are expecting an integer here.");
             }
 
-            if (input > max || input < min){
+            if (userChoice > max || userChoice < min){
                 System.out.println("Please enter a number between " + min + " and " + max + ".");
             }
 
-        } while (input > max || input < min);
+        } while (userChoice > max || userChoice < min);
 
-        return input;
+        return userChoice;
     }
 
     /**
@@ -338,7 +344,7 @@ public class UserInterface {
     private String getExpectedString(int minLength, int maxLength) {
 
         String input = this.scan.nextLine();
-        // First scan here is not take in count
+        // First scan here not took in count
         // Java consider our "/n" or "" coming from previous one as input
 
         while (input.length() > maxLength || input.length() < minLength){

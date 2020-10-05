@@ -186,11 +186,23 @@ public class Account {
 
     /**
      * Display the list in parameter - and index as a line number
+     * Expense in Red, Income in Green for readability.
      * @param listToPrint -> Actual list to print
      */
     public void printList(List<Item> listToPrint) {
+        String ANSI_RESET = "\u001B[0m";
+        String ANSI_RED = "\u001B[31m";
+        String ANSI_GREEN = "\u001B[32m";
+
         for (int i = 0 ; i < listToPrint.size(); i ++) {
-            System.out.println((i+1) + " - " + listToPrint.get(i));
+            System.out.print((i+1) + " - ");
+
+            if (listToPrint.get(i).getType().equals("Expense")) {
+                System.out.println(ANSI_RED + listToPrint.get(i) + ANSI_RESET);
+            } else {
+                System.out.println(ANSI_GREEN + listToPrint.get(i) + ANSI_RESET);
+            }
+
         }
     }
 
