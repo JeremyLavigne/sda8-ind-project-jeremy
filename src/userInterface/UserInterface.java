@@ -14,30 +14,22 @@ public class UserInterface {
     private final Account account;
     private final Scanner scan;
 
-    /**
-     * Constructor - Need user Account to work with
-     * @param userAccount -> user Account
-     */
     public UserInterface(Account userAccount){
         this.account = userAccount;
         this.scan = new Scanner(System.in);
     }
 
-    /**
-     * Launch user interface.
-     */
+    // Launch user interface.
     public void start() {
-
         System.out.println("\nWelcome to TrackMoney.");
         this.offerOptions();
     }
 
-    /**
-     * End user interface
-     */
+    // End user interface
     private void stop() {
         this.scan.close();
     }
+
 
 
     // =============================================================================================
@@ -70,16 +62,16 @@ public class UserInterface {
     }
 
     /**
-     * Choice n°1 - Show user items already in file
-     *   @param what -> What are we displaying ? 'All', 'Only expenses' or 'Only incomes'
-     *   @param sortBy -> Sort by ? 'Month', 'Title' or 'Amount'
+     * Choice n°1 - Show user items
+     *   @param what -> 'All', 'Only expenses' or 'Only incomes'
+     *   @param sortBy -> 'Month', 'Title' or 'Amount'
      *   @param how -> 'Descending' or 'Ascending'
      */
     private void showItemsPicked(String what, String sortBy, String how) {
 
         this.account.printItems(what, sortBy, how);
 
-        // Menu to re-arrange display
+        // Sub-menu : options to re-arrange display
         String[] options = defineOptions(what, sortBy, how);
         displayOptions(options);
 
@@ -104,6 +96,7 @@ public class UserInterface {
         System.out.println("\n ------------------------------------ \n");
         System.out.println("Please enter new item details :");
 
+        // Need to clarify this
         Item newItem = this.newItemForm("", "", 0, "");
 
         System.out.println("(1) Save - (2) Erase and restart");
@@ -162,7 +155,7 @@ public class UserInterface {
     }
 
     /**
-     * Choice n°4 - End program
+     * Choice n°4 - Close program
      */
     private void saveAndQuit() {
         System.out.println("\n ------------------------------------ \n");
@@ -178,8 +171,8 @@ public class UserInterface {
 
     /**
      * Define options regarding the current user choice. Avoid duplication : we do not offer the current displaying
-     * @param what -> What are we displaying ? 'All', 'Only expenses' or 'Only incomes'
-     * @param sortBy -> Sort by ? 'Month', 'Title' or 'Amount'
+     * @param what ->  'All', 'Only expenses' or 'Only incomes'
+     * @param sortBy -> 'Month', 'Title' or 'Amount'
      * @param how -> 'Descending' or 'Ascending'
      * @return the correct options as an array.
      */
@@ -240,10 +233,11 @@ public class UserInterface {
 
 
     // =============================================================================================
-    // -------------------------------- UI display - Edit  -----------------------------------------
+    // ------------------------------ UI display - Add/Edit (2-3) ----------------------------------
     // =============================================================================================
 
     /**
+     * Need to clarify this (the whole 'currentThings')
      * Method to edit one line. Should we use the line number as an index of ArrayList ?
      * @param index -> index of item to edit
      */
@@ -262,6 +256,7 @@ public class UserInterface {
     }
 
     /**
+     * Could be optimized.
      * Form to create/update an item. Default values in parameters (for editing)
      * @param currentAmount -> amount default value
      * @param currentTitle -> title default value
@@ -303,8 +298,7 @@ public class UserInterface {
     // =============================================================================================
 
     /**
-     * Get an integer input from user. Ask again if not in range.
-     * Prevent user mistake if String is entered.
+     * Get an integer input from user. Ask again if not in range. Prevent user mistake if String is entered.
      * @param min  lowest possible int
      * @param max  highest possible int
      * @return User input Integer
@@ -343,14 +337,14 @@ public class UserInterface {
      */
     private String getExpectedString(int minLength, int maxLength) {
 
-        String input = this.scan.nextLine();
+        String input = this.scan.nextLine(); // Should fix it
         // First scan here not took in count
         // Java consider our "/n" or "" coming from previous one as input
 
         while (input.length() > maxLength || input.length() < minLength){
 
             System.out.print("->");
-            // Need some try catch or not ??
+            // Does a try catch block useful for a String ?
             input = this.scan.nextLine();
 
             if (input.length() > maxLength || input.length() < minLength){

@@ -8,7 +8,7 @@ package main;
  * Month -> taken as an integer for sorting, used as a String for displaying
  */
 public class Item {
-    private final String type;
+    private final String type; // Boolean ?
     private final int amount;
     private final String title;
     private final int month;
