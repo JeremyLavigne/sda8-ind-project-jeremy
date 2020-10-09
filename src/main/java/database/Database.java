@@ -2,9 +2,7 @@ package database;
 
 import main.Item;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -48,7 +46,7 @@ public class Database {
      * @param list -> List modified/created in User Interface
      * @throws FileNotFoundException -> If no file
      */
-    public void writeListIntoFile(List<Item> list) throws FileNotFoundException {
+    public void writeListIntoFile(List<Item> list) throws IOException {
         PrintWriter pw = new PrintWriter(this.file);
 
         for (Item item : list) {

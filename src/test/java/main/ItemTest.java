@@ -9,6 +9,11 @@ public class ItemTest {
     @Test
     @DisplayName("getStringMonth method return the expected month as a String")
     public void getStringMonthReturnStringMonth() {
-        assertThat(1).isEqualTo(1);
+
+        Item item = new Item("Expense", "Test", 0, 12);
+
+        String month = item.getStringMonth();
+
+        assertThat(month).isEqualTo("December");
     }
 }

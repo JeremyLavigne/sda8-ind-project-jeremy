@@ -1,8 +1,8 @@
-Income;Example 6;12340;6
-Expense;Example 5;6800;5
-Income;Example 2;1000;2
 Expense;Example 1;900;1
-Income;Example 8;200;8
-Income;Example 4;100;4
-Expense;Example 7;90;7
+Income;Example 2;1000;2
 Expense;Example 3;90;3
+Income;Example 4;100;4
+Expense;Example 5;6800;5
+Income;Example 6;12340;6
+Expense;Example 7;90;7
+Income;Example 8;200;8

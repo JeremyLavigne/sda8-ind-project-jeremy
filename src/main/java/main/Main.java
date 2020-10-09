@@ -4,6 +4,7 @@ import database.Database;
 import userInterface.UserInterface;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +34,7 @@ public class Main {
         // Save List of item
         try {
             myDatabase.writeListIntoFile(userAccount.getItems());
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
