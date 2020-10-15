@@ -3,7 +3,6 @@ package main;
 import database.Database;
 import userInterface.UserInterface;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -14,15 +13,15 @@ public class Main {
 
     public static void main(String[] args){
 
-        // Get List of Item from database
+        // Create database
         Database myDatabase = new Database("assets/database.txt");
 
+        // Get List of Items from database
         ArrayList<Item> savedList = new ArrayList<>();
         try {
             savedList = myDatabase.getListFromFile();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        } catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
 
         // Create account
         Account userAccount = new Account(savedList);
@@ -31,11 +30,11 @@ public class Main {
         UserInterface ui = new UserInterface(userAccount);
         ui.start();
 
-        // Save List of item
+        // Save List of items in database
         try {
-            myDatabase.writeListIntoFile(userAccount.getItems());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            myDatabase.writeListIntoFile(savedList);
+
+        } catch (IOException e) { e.printStackTrace(); }
+
     }
 }
