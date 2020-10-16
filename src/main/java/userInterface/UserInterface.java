@@ -325,7 +325,7 @@ public class UserInterface {
      * @param max  highest possible int
      * @return User input Integer
      */
-    private int getExpectedInteger(int min, int max) {
+    public int getExpectedInteger(int min, int max) {
         String input;
         int userChoice = -1;
 
@@ -357,7 +357,7 @@ public class UserInterface {
      * @param maxLength  highest possible length
      * @return User input string
      */
-    private String getExpectedString(int minLength, int maxLength) {
+    public String getExpectedString(int minLength, int maxLength) {
         this.scan.nextLine(); // Clear scanner
 
         String input = "";
