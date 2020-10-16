@@ -1,17 +1,23 @@
 package main;
 
+import java.io.Serializable;
+
 /**
  * One item.
  * Type -> Expense or Income
  * Title -> Label
  * Amount
  * Month -> taken as an integer for sorting, used as a String for displaying
+ *
+ * @author Jeremy
+ * @version 1.0
  */
-public class Item {
-    private final String type; // Boolean ?
-    private final int amount;
-    private final String title;
-    private final int month;
+public class Item implements Serializable {
+
+    private String type;
+    private String title;
+    private int amount;
+    private int month;
 
     public Item(String itemType, String itemTitle, int itemAmount, int itemMonth){
         this.type = itemType;

@@ -5,54 +5,66 @@ import main.Item;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
- * This class mocks a database: read and write the list of items
- * Only read once at first and write once at the end.
+ * This class mocks a database: read and write the list of items.
+ *
+ * Only read once before launching user Interface
+ * Only write once at the end, when user save.
+ *
+ * @author Jeremy
+ * @version 1.0
  */
 public class Database {
-    private final File file;
 
-    public Database(String fileName) {
-        this.file = new File(fileName);
+    private String fileName;
+
+    public Database(String nameOfFile) {
+        this.fileName = nameOfFile;
     }
 
     /**
-     * Get the list from the database and return it.
-     * @return Initial user list of item
-     * @throws FileNotFoundException -> If no file
+     * Get the list from the database and return it. List is a stream object.
+     *
+     * @return saved user list of items
      */
-    public ArrayList<Item> getListFromFile() throws FileNotFoundException {
-        Scanner scan = new Scanner(this.file);
-        ArrayList<Item> list = new ArrayList<>();
+    public ArrayList<Item> getListFromFile() throws IOException, ClassNotFoundException {
 
-        while (scan.hasNext()) {
-            String[] splitLine = scan.nextLine().split(";");
+        ObjectInputStream OIS = new ObjectInputStream(new FileInputStream(fileName));
+        ArrayList<Item> itemsFromDatabase = new ArrayList<>();
 
-            list.add(new Item(splitLine[0], // Type
-                    splitLine[1], // Title
-                    Integer.parseInt(splitLine[2]),  // Amount
-                    Integer.parseInt(splitLine[3]))  // Month
-            );
+        try (OIS) {
+            while (true) {
+                Object read = OIS.readObject();
+                if (read == null) { break; }
+
+                itemsFromDatabase.add((Item) read);
+            }
+
+        } catch (EOFException e) {
+            System.out.println("End of file");
         }
-        scan.close();
-        return list;
+
+        OIS.close();
+
+        return itemsFromDatabase;
+
     }
 
 
     /**
-     * Save the list in the database.
-     * @param list -> List modified/created in User Interface
-     * @throws FileNotFoundException -> If no file
+     * Save the list in the database. List is saved as a Stream object
+     *
+     * @param listToSave -> List modified/created in User Interface
      */
-    public void writeListIntoFile(List<Item> list) throws IOException {
-        PrintWriter pw = new PrintWriter(this.file);
+    public void writeListIntoFile(List<Item> listToSave) throws IOException {
 
-        for (Item item : list) {
-            pw.println(item.getType() + ";" + item.getTitle() + ";" + item.getAmount() + ";" + item.getMonth());
+        ObjectOutputStream OOS = new ObjectOutputStream(new FileOutputStream(fileName));
+
+        for (Item item : listToSave) {
+            OOS.writeObject(item);
         }
 
-        pw.close();
+        OOS.close();
     }
 }

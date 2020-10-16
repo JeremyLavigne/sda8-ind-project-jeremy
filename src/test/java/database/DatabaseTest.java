@@ -1,145 +1,141 @@
 package database;
 
 import main.Item;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 
 public class DatabaseTest {
-    ArrayList<Item> testList = new ArrayList<>();
-    Throwable thrown;
+    File fileForTest;
+    Database databaseForTest;
+    ArrayList<Item> itemsForTest;
 
-    @Test
-    @DisplayName("Reading an existing (non empty) file should return a list (non empty)")
-    public void ReadingExistingFileShouldReturnList() {
-
-        Database myDatabase = new Database("assets/database.txt");
-
-        try {
-            this.testList = myDatabase.getListFromFile();
-        } catch (FileNotFoundException e) {
-            this.thrown = catchThrowable(() -> { throw new Exception("No file"); });
-        }
-
-        assertThat(testList).isInstanceOf(java.util.ArrayList.class);
-        assertThat(testList.size()).isGreaterThan(0);
+    @BeforeEach
+    public void createDatabaseForTest() throws IOException {
+        fileForTest = new File("assets/fileForTest.txt");
+        fileForTest.createNewFile();
+        databaseForTest = new Database("assets/fileForTest.txt");
     }
 
-    @Test
-    @DisplayName("Reading a non existing file throw an exception")
-    public void ReadingNonExistingFileShouldThrowException() {
-
-        Database myDatabase = new Database("assets/noFile.txt");
-
-        try {
-            this.testList = myDatabase.getListFromFile();
-        } catch (FileNotFoundException e) {
-            this.thrown = catchThrowable(() -> { throw new Exception("No file"); });
-        }
-
-        assertThat(this.thrown).isInstanceOf(Exception.class)
-                .hasMessageContaining("No file");
-
+    @BeforeEach
+    public void createEmptyList() {
+        itemsForTest = new ArrayList<>();
     }
 
-    @Test
-    @DisplayName("Reading an empty file should return an empty list")
-    public void ReadingEmptyFileShouldReturnEmptyList() {
-
-        File file = new File("assets/test.txt");
-        try {
-            file.createNewFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        Database myDatabase = new Database("assets/test.txt");
-
-        try {
-            this.testList = myDatabase.getListFromFile();
-        } catch (FileNotFoundException e) {
-            this.thrown = catchThrowable(() -> { throw new Exception("No file"); });
-        }
-
-        assertThat(testList).isInstanceOf(java.util.ArrayList.class);
-        assertThat(testList.size()).isEqualTo(0);
-
-        file.delete();
-
+    @AfterEach
+    public void deleteFileForTest() {
+        fileForTest.delete();
     }
 
-    @Test
-    @DisplayName("Writing a list into an existing file should replace the previous by the new one")
-    public void WritingNewListIntoExistingFileShouldReplacePreviousByNew() {
 
-        // New file with 3 lines
-        File file = new File("assets/test.txt");
-        try {
-            file.createNewFile();
-            FileWriter myWriter = new FileWriter("assets/test.txt");
-            myWriter.write("Expense;test;0;0\nExpense;test;0;0\nExpense;test;0;0");
-            myWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Nested
+    class ReadingFileTests {
+
+        @Test
+        @DisplayName("Reading a non existing file throw an exception.")
+        public void readNonExistingFile() {
+            databaseForTest = new Database("assets/NonExistingFile.txt");
+
+            assertThatExceptionOfType(IOException.class)
+                    .isThrownBy(() -> {
+                        databaseForTest.getListFromFile();
+                    });
         }
 
-        Database myDatabase = new Database("assets/test.txt");
+        @Test
+        @DisplayName("Reading an empty file should return an empty list.")
+        public void readEmptyFile() {
 
-        try {
-            this.testList = myDatabase.getListFromFile();
-        } catch (FileNotFoundException e) {
-            this.thrown = catchThrowable(() -> { throw new Exception("No file"); });
+            // Read empty file
+            try {
+                itemsForTest = databaseForTest.getListFromFile();
+            } catch (IOException | ClassNotFoundException e) {
+                System.out.println(e.getMessage());
+            }
+
+            // Compare size
+            assertThat(itemsForTest.size()).isEqualTo(0);
+
         }
 
-        // New List with 1 items
-        ArrayList<Item> newList = new ArrayList<>();
-        newList.add(new Item("Expense", "test", 0, 1));
+        @Test
+        @DisplayName("Reading an existing (non empty) file should return the content as a list.")
+        public void ReadingExistingFile() throws IOException {
 
-        try {
-            myDatabase.writeListIntoFile(newList);
-        } catch (IOException e) {
-            this.thrown = catchThrowable(() -> { throw new Exception("Other"); });
+            // Prepare a file with two object inside
+            ObjectOutputStream OOS = new ObjectOutputStream(new FileOutputStream(fileForTest));
+            OOS.writeObject(new Item("Expense", "Test1", 0, 1));
+            OOS.writeObject(new Item("Income", "Test2", 0, 2));
+
+            // Read the file
+            try {
+                itemsForTest = databaseForTest.getListFromFile();
+            } catch (IOException | ClassNotFoundException e) { System.out.println(e.getMessage()); }
+
+            // Check content
+            String expected = "[Expense | Test1 | 0 | January, Income | Test2 | 0 | February]";
+            assertThat(expected).isEqualTo(itemsForTest.toString());
         }
-
-        // Get again from the file
-        ArrayList<Item> testList2 = new ArrayList<>();
-        try {
-            testList = myDatabase.getListFromFile();
-        } catch (FileNotFoundException e) {
-            this.thrown = catchThrowable(() -> { throw new Exception("No file"); });
-        }
-
-        // Means testList, is replace by newList
-        assertThat(testList.size()).isGreaterThan(testList2.size());
-
-        file.delete();
     }
 
-/* Test fail cause create a new file if not existing
-    choices : Remove test ? Consider creating file is good ? Find a way to thrown expression ?
+    @Nested
+    class WritingFileTests {
 
-   @Test
-    @DisplayName("Writing into a non existing file throw an exception")
-    public void WritingIntoANonExistingFileShouldThrowAnException() {
+        @Test
+        @DisplayName("Writing into a non existing file should create it.")
+        public void WriteNonExistingFile() {
 
-        Database myDatabase = new Database("assets/noFile.txt");
+            databaseForTest = new Database("assets/NonExistingFile.txt");
 
-        try {
-            myDatabase.writeListIntoFile(this.testList);
-        } catch (IOException e) {
-            this.thrown = catchThrowable(() -> { throw new Exception("Other"); });
+            try {
+                databaseForTest.writeListIntoFile(itemsForTest);
+            } catch (IOException e) { System.out.println(e.getMessage()); }
+
+            // We know that reading a non existing file throw an exception (see test before)
+            // So if there is no exception here, it means the file exist
+            assertThatCode(() -> {
+                Database newDatabaseForTest = new Database("assets/NonExistingFile.txt");
+                newDatabaseForTest.getListFromFile();
+            }).doesNotThrowAnyException();
+
+
+            // Delete the created file
+            File fileToRemove = new File("assets/NonExistingFile.txt");
+            fileToRemove.delete();
         }
 
-        assertThat(this.thrown).isInstanceOf(Exception.class)
-                .hasMessageContaining("No file");
-    }*/
 
+        @Test
+        @DisplayName("Writing a list into a file should replace the previous list by the new one")
+        public void WritingNewList() {
+
+            // Read the file
+            try {
+                itemsForTest = databaseForTest.getListFromFile();
+            } catch (IOException | ClassNotFoundException e) { System.out.println(e.getMessage()); }
+
+            // Add two objects in list and write it into file
+            itemsForTest.add(new Item("Expense", "Test1", 0, 1));
+            itemsForTest.add(new Item("Income", "Test2", 0, 2));
+
+            try {
+                databaseForTest.writeListIntoFile(itemsForTest);
+            } catch (IOException e) { System.out.println(e.getMessage());}
+
+            // Read the file again
+            try {
+                itemsForTest = databaseForTest.getListFromFile();
+            } catch (IOException | ClassNotFoundException e) { System.out.println(e.getMessage()); }
+
+            // Check content
+            String expected = "[Expense | Test1 | 0 | January, Income | Test2 | 0 | February]";
+            assertThat(expected).isEqualTo(itemsForTest.toString());
+        }
+
+    }
 }

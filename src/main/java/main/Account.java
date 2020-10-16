@@ -10,29 +10,34 @@ import java.util.stream.Collectors;
 /**
  * This class represents one user account.
  * One single field -> List of item (expense or income)
+ *
+ * @author Jeremy
+ * @version 1.0
  */
 public class Account {
 
-    private final ArrayList<Item> items;
+    private ArrayList<Item> items;
 
     public Account(ArrayList<Item> initialList) {
         this.items = initialList;
     }
 
-    // Calculate balance using all item amount inside current list of items
+    /**
+     * Calculate balance using all item amount inside current list of items
+      */
     public int getBalance() {
 
-        int incomeSum = this.items.stream()
+        int incomeSum = this.items.stream()                     // All incomes
                 .filter(item -> item.getType().equals("Income"))
                 .map(Item::getAmount)
                 .reduce(0, (sum, previous) -> sum += previous);
 
-        int expenseSum = this.items.stream()
+        int expenseSum = this.items.stream()                    // All expenses
                 .filter(item -> item.getType().equals("Expense"))
                 .map(Item::getAmount)
                 .reduce(0, (sum, previous) -> sum += previous);
 
-        return incomeSum - expenseSum;
+        return incomeSum - expenseSum;                          // Balance
     }
 
     public List<Item> getItems() {
@@ -59,6 +64,7 @@ public class Account {
 
     /**
      * Define the correct list to be display, regarding user choices. Then, print the list.
+     *
      * @param what -> 'All', 'Only expenses' or 'Only incomes'
      * @param sortBy -> 'Month', 'Title' or 'Amount'
      * @param how -> 'Descending' or 'Ascending'
@@ -88,12 +94,12 @@ public class Account {
             default: break;
         }
 
-        if (how.equals("Ascending")) {
+        if (how.equals("Descending")) {
             Collections.reverse(listToPrint);
         }
-        // if "Descending", keep original order
+        // if "Ascending", keep original order
 
-        System.out.println("\n ------------------------------------\n ");
+        System.out.println("\n ------------------------------------\n");
 
         printList(listToPrint);
     }
@@ -101,12 +107,13 @@ public class Account {
     /**
      * Display the list in parameter - add a line number
      * Expense in Red, Income in Green.
+     *
      * @param listToPrint - List to print.
      */
     public void printList(List<Item> listToPrint) {
-        String ANSI_RESET = "\u001B[0m";
-        String ANSI_RED = "\u001B[31m";
-        String ANSI_GREEN = "\u001B[32m";
+        String ANSI_RESET = "\u001B[0m";    // Back to black
+        String ANSI_RED = "\u001B[31m";     // Put before a String to have it in Red
+        String ANSI_GREEN = "\u001B[32m";   // Put before a String to have it in Green
 
         for (int i = 0 ; i < listToPrint.size(); i ++) {
             System.out.print((i+1) + " - ");
