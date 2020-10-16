@@ -9,14 +9,19 @@ import java.util.Scanner;
 /**
  * This class provides all user interface : menu(s), user choices via console input.
  * Dispatch to correct data/methods regarding user choice.
+ *
+ * @author Jeremy
+ * @version 1.0
  */
 public class UserInterface {
     private final Account account;
     private final Scanner scan;
+    private boolean exit; // Used for staying in the menu or exit the program
 
     public UserInterface(Account userAccount){
         this.account = userAccount;
         this.scan = new Scanner(System.in);
+        this.exit = false;
     }
 
     // Launch user interface.
@@ -41,23 +46,34 @@ public class UserInterface {
      */
     private void offerOptions() {
 
-        System.out.println("---------------------------------------");
-        System.out.println("You have currently " + this.account.getBalance() + " kr on your account.");
-        System.out.println("\nPick an option :\n" +
-                "(1) Show items (All / Expense(s) / Income(s)), \n" +
-                "(2) Add new expense / income, \n" +
-                "(3) Edit item (edit, remove), \n" +
-                "(4) Save and quit. \n");
+        while (!exit) {
+            System.out.println("---------------------------------------");
+            System.out.println("You have currently " + this.account.getBalance() + " kr on your account.");
+            System.out.println("\nPick an option :\n" +
+                    "(1) Show items (All / Expense(s) / Income(s)), \n" +
+                    "(2) Add new expense / income, \n" +
+                    "(3) Edit item (edit, remove), \n" +
+                    "(4) Save and quit. \n");
 
 
-        int input = getExpectedInteger(1,4);
+            int input = getExpectedInteger(1, 4);
 
-        switch (input) {
-            case 1 : this.showItemsPicked("All", "Month", "Descending"); break;
-            case 2 : this.addItemPicked(); break;
-            case 3 : this.editItemPicked(); break;
-            case 4 : this.saveAndQuit(); break;
-            default : break;
+            switch (input) {
+                case 1:
+                    this.showItemsPicked("All", "Month", "Ascending");
+                    break;
+                case 2:
+                    this.addItemPicked();
+                    break;
+                case 3:
+                    this.editItemPicked();
+                    break;
+                case 4:
+                    this.saveAndQuit();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -83,7 +99,7 @@ public class UserInterface {
             case 3 : this.showItemsPicked(what, options[2], how); break;
             case 4 : this.showItemsPicked(what, options[3], how); break;
             case 5 : this.showItemsPicked(what, sortBy, options[4]); break;
-            case 6 : this.offerOptions(); break;
+            case 6 : break; // Back to menu
             default : break;
         }
 
@@ -96,7 +112,7 @@ public class UserInterface {
         System.out.println("\n ------------------------------------ \n");
         System.out.println("Please enter new item details :");
 
-        // Need to clarify this
+        // Pass to the new item form method
         Item newItem = this.newItemForm("", "", 0, "");
 
         System.out.println("(1) Save - (2) Erase and restart");
@@ -105,7 +121,6 @@ public class UserInterface {
         if (inputSaveOrNot == 1) {
             System.out.println("Saved!");
             this.account.addItem(newItem);
-            this.offerOptions();
         } else {
             System.out.println("Current item deleted.");
             this.addItemPicked();
@@ -120,7 +135,6 @@ public class UserInterface {
         int numberOfLines = this.account.getItemsSize();
         if (numberOfLines == 0) {
             System.out.println("There is nothing to edit.");
-            this.offerOptions();
             return;
         }
 
@@ -148,8 +162,6 @@ public class UserInterface {
 
         if (inputBack == 1) {
             this.editItemPicked();
-        } else {
-            this.offerOptions();
         }
 
     }
@@ -160,6 +172,7 @@ public class UserInterface {
     private void saveAndQuit() {
         System.out.println("\n ------------------------------------ \n");
         System.out.println("Saved ! \n\nGood Bye :-)");
+        this.exit = true;
         this.stop();
     }
 
@@ -170,7 +183,9 @@ public class UserInterface {
     // =============================================================================================
 
     /**
-     * Define options regarding the current user choice. Avoid duplication : we do not offer the current displaying
+     * Define options regarding the current user choice.
+     * Avoid duplication : we do not offer the current displaying
+     *
      * @param what ->  'All', 'Only expenses' or 'Only incomes'
      * @param sortBy -> 'Month', 'Title' or 'Amount'
      * @param how -> 'Descending' or 'Ascending'
@@ -211,6 +226,7 @@ public class UserInterface {
 
     /**
      * Offer options to re-arrange the list of items - display at the bottom of it.
+     *
      * @param options -> options to display
      */
     private void displayOptions(String[] options) {
@@ -237,8 +253,8 @@ public class UserInterface {
     // =============================================================================================
 
     /**
-     * Need to clarify this (the whole 'currentThings')
-     * Method to edit one line. Should we use the line number as an index of ArrayList ?
+     * Method to edit one line. We use the line number as an index of ArrayList ?
+     *
      * @param index -> index of item to edit
      */
     private void editLine(int index) {
@@ -256,8 +272,8 @@ public class UserInterface {
     }
 
     /**
-     * Could be optimized.
      * Form to create/update an item. Default values in parameters (for editing)
+     *
      * @param currentAmount -> amount default value
      * @param currentTitle -> title default value
      * @param currentMonth -> month default value (as a string)
@@ -265,6 +281,9 @@ public class UserInterface {
      */
     private Item newItemForm(String currentType, String currentTitle, int currentAmount, String currentMonth) {
 
+        /*
+         * Duplicate code, but more 'understandable'
+         */
         System.out.println("Type : (1) Expense - (2) Income :");
         System.out.print(currentType.equals("") ? "" : "(Currently : " + currentType + ")");
         int inputType = getExpectedInteger(1,2);
@@ -278,7 +297,7 @@ public class UserInterface {
         System.out.print(currentAmount == 0 ? "" : "(Currently : " + currentAmount + ")");
         int inputAmount = getExpectedInteger(0, 10000000);
 
-        System.out.println("Month : (0) Current month - (1) January - (2) February - ... -> ");
+        System.out.println("Month : (1) January - (2) February - ... -> ");
         System.out.print(currentMonth.equals("") ? "" : "(Currently : " +  currentMonth + ")");
         int inputMonth = getExpectedInteger(0, 12);
 
@@ -297,8 +316,11 @@ public class UserInterface {
     // -------------------------------- UI display - Utils -----------------------------------------
     // =============================================================================================
 
+
     /**
-     * Get an integer input from user. Ask again if not in range. Prevent user mistake if String is entered.
+     * Get an integer input from user. Ask again if not in range.
+     * Prevent user mistake if String is entered.
+     *
      * @param min  lowest possible int
      * @param max  highest possible int
      * @return User input Integer
@@ -311,13 +333,11 @@ public class UserInterface {
             System.out.print("->");
 
             try {
-                input = this.scan.next(); // Take input as a String to prevent app crash
+                input = this.scan.next();       // Take input as a String to prevent app crash
                 userChoice = Integer.parseInt(input);
 
             } catch (Exception e) {
                 System.out.println("We are expecting an integer.");
-                // Is it necessary to throw exception here ?
-                //throw new IllegalArgumentException("We are expecting an integer here.");
             }
 
             if (userChoice > max || userChoice < min){
@@ -330,21 +350,22 @@ public class UserInterface {
     }
 
     /**
-     * Get an String input from userAsk again if not in range. Do we need an exception here ??
+     * Get an String input from userAsk again if not in range.
+     * Ask for a 'reasonable' length, we don't want a title with 2000 characters as a Title
+     *
      * @param minLength  lowest possible length
      * @param maxLength  highest possible length
      * @return User input string
      */
     private String getExpectedString(int minLength, int maxLength) {
+        this.scan.nextLine(); // Clear scanner
 
-        String input = this.scan.nextLine(); // Should fix it
-        // First scan here not took in count
-        // Java consider our "/n" or "" coming from previous one as input
+        String input = "";
 
         while (input.length() > maxLength || input.length() < minLength){
 
             System.out.print("->");
-            // Does a try catch block useful for a String ?
+
             input = this.scan.nextLine();
 
             if (input.length() > maxLength || input.length() < minLength){
