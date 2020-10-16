@@ -55,7 +55,7 @@ public class DatabaseTest {
             try {
                 itemsForTest = databaseForTest.getListFromFile();
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
             }
 
             // Compare size
@@ -75,7 +75,7 @@ public class DatabaseTest {
             // Read the file
             try {
                 itemsForTest = databaseForTest.getListFromFile();
-            } catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+            } catch (IOException | ClassNotFoundException e) { System.out.println(e.getMessage()); }
 
             // Check content
             String expected = "[Expense | Test1 | 0 | January, Income | Test2 | 0 | February]";
@@ -94,7 +94,7 @@ public class DatabaseTest {
 
             try {
                 databaseForTest.writeListIntoFile(itemsForTest);
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) { System.out.println(e.getMessage()); }
 
             // We know that reading a non existing file throw an exception (see test before)
             // So if there is no exception here, it means the file exist
@@ -117,7 +117,7 @@ public class DatabaseTest {
             // Read the file
             try {
                 itemsForTest = databaseForTest.getListFromFile();
-            } catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+            } catch (IOException | ClassNotFoundException e) { System.out.println(e.getMessage()); }
 
             // Add two objects in list and write it into file
             itemsForTest.add(new Item("Expense", "Test1", 0, 1));
@@ -125,12 +125,12 @@ public class DatabaseTest {
 
             try {
                 databaseForTest.writeListIntoFile(itemsForTest);
-            } catch (IOException e) { e.printStackTrace(); }
+            } catch (IOException e) { System.out.println(e.getMessage());}
 
             // Read the file again
             try {
                 itemsForTest = databaseForTest.getListFromFile();
-            } catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+            } catch (IOException | ClassNotFoundException e) { System.out.println(e.getMessage()); }
 
             // Check content
             String expected = "[Expense | Test1 | 0 | January, Income | Test2 | 0 | February]";

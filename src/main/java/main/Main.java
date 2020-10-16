@@ -30,6 +30,8 @@ public class Main {
         UserInterface ui = new UserInterface(userAccount);
         ui.start();
 
+        userAccount.printItems("All", "Month", "Ascending");
+
         // Save List of items in database
         try {
             myDatabase.writeListIntoFile(savedList);

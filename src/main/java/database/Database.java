@@ -11,6 +11,9 @@ import java.util.List;
  *
  * Only read once before launching user Interface
  * Only write once at the end, when user save.
+ *
+ * @author Jeremy
+ * @version 1.0
  */
 public class Database {
 

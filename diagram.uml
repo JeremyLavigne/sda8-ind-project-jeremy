@@ -3,73 +3,18 @@
   <ID>JAVA</ID>
   <OriginalElement />
   <nodes>
-    <node x="0.0" y="640.0">userInterface.UserInterface</node>
-    <node x="282.1875" y="1086.0">main.Main</node>
-    <node x="262.1201923076923" y="0.0">main.Item</node>
-    <node x="457.78708791208794" y="402.0">database.Database</node>
-    <node x="153.7870879120879" y="336.0">main.Account</node>
+    <node x="0.0" y="0.0">userInterface.UserInterface</node>
+    <node x="636.0" y="453.0">main.Main</node>
+    <node x="375.0" y="0.0">main.Item</node>
+    <node x="328.0" y="453.0">database.Database</node>
+    <node x="0.0" y="453.0">main.Account</node>
   </nodes>
   <notes />
-  <edges>
-    <edge source="main.Main" target="main.Account">
-      <point x="0.0" y="-27.0" />
-      <point x="366.6875" y="1066.0" />
-      <point x="376.8983516483517" y="1066.0" />
-      <point x="376.8983516483517" y="615.0" />
-      <point x="401.41208791208794" y="615.0" />
-      <point x="106.125" y="127.0" />
-    </edge>
-    <edge source="database.Database" target="main.Item">
-      <point x="-65.75" y="-61.0" />
-      <point x="523.5370879120879" y="306.0" />
-      <point x="435.76304945054943" y="306.0" />
-      <point x="63.14285714285711" y="138.0" />
-    </edge>
-    <edge source="main.Main" target="main.Item">
-      <point x="24.14285714285711" y="-27.0" />
-      <point x="390.8303571428571" y="1046.0" />
-      <point x="447.28708791208794" y="1046.0" />
-      <point x="447.28708791208794" y="316.0" />
-      <point x="404.1916208791209" y="316.0" />
-      <point x="31.571428571428555" y="138.0" />
-    </edge>
-    <edge source="main.Main" target="database.Database">
-      <point x="72.42857142857144" y="-27.0" />
-      <point x="439.11607142857144" y="1066.0" />
-      <point x="596.5206043956044" y="1066.0" />
-      <point x="596.5206043956044" y="615.0" />
-      <point x="655.0370879120879" y="615.0" />
-      <point x="65.75000000000003" y="61.0" />
-    </edge>
-    <edge source="main.Main" target="userInterface.UserInterface">
-      <point x="-72.42857142857144" y="-27.0" />
-      <point x="294.25892857142856" y="1066.0" />
-      <point x="82.5" y="1066.0" />
-      <point x="-82.5" y="193.0" />
-    </edge>
-    <edge source="userInterface.UserInterface" target="main.Item">
-      <point x="-123.75" y="-193.0" />
-      <point x="41.25" y="615.0" />
-      <point x="84.09684065934067" y="615.0" />
-      <point x="84.09684065934067" y="296.0" />
-      <point x="277.9059065934066" y="296.0" />
-      <point x="-94.71428571428572" y="138.0" />
-    </edge>
-    <edge source="userInterface.UserInterface" target="main.Account">
-      <point x="41.25" y="-193.0" />
-      <point x="206.25" y="615.0" />
-      <point x="189.1620879120879" y="615.0" />
-      <point x="-106.125" y="127.0" />
-    </edge>
-    <edge source="main.Account" target="main.Item">
-      <point x="-70.75" y="-127.0" />
-      <point x="224.5370879120879" y="316.0" />
-      <point x="341.04876373626377" y="316.0" />
-      <point x="-31.571428571428555" y="138.0" />
-    </edge>
-  </edges>
-  <settings layout="Hierarchic Group" zoom="0.5637931034482758" x="360.5" y="560.0" />
-  <SelectedNodes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="0.5637931034482758" x="361.0" y="451.80428134556576" />
+  <SelectedNodes>
+    <node>userInterface.UserInterface</node>
+  </SelectedNodes>
   <Categories>
     <Category>Fields</Category>
     <Category>Constructors</Category>

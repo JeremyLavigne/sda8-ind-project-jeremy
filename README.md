@@ -1,3 +1,5 @@
+[![Generic badge](https://img.shields.io/badge/Java-14-<COLOR>.svg)](https://shields.io/)
+
 # Individual Project - SDA 8, Novare Potential
 
 
