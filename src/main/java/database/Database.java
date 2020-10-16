@@ -39,7 +39,7 @@ public class Database {
             }
 
         } catch (EOFException e) {
-            e.printStackTrace();
+            System.out.println("End of file");
         }
 
         OIS.close();

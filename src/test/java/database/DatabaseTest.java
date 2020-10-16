@@ -51,20 +51,35 @@ public class DatabaseTest {
         @DisplayName("Reading an empty file should return an empty list.")
         public void readEmptyFile() {
 
+            // Read empty file
             try {
                 itemsForTest = databaseForTest.getListFromFile();
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
 
+            // Compare size
             assertThat(itemsForTest.size()).isEqualTo(0);
 
         }
 
         @Test
         @DisplayName("Reading an existing (non empty) file should return the content as a list.")
-        public void ReadingExistingFile() {
-            // Not written yet
+        public void ReadingExistingFile() throws IOException {
+
+            // Prepare a file with two object inside
+            ObjectOutputStream OOS = new ObjectOutputStream(new FileOutputStream(fileForTest));
+            OOS.writeObject(new Item("Expense", "Test1", 0, 1));
+            OOS.writeObject(new Item("Income", "Test2", 0, 2));
+
+            // Read the file
+            try {
+                itemsForTest = databaseForTest.getListFromFile();
+            } catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
+            // Check content
+            String expected = "[Expense | Test1 | 0 | January, Income | Test2 | 0 | February]";
+            assertThat(expected).isEqualTo(itemsForTest.toString());
         }
     }
 
@@ -79,9 +94,7 @@ public class DatabaseTest {
 
             try {
                 databaseForTest.writeListIntoFile(itemsForTest);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            } catch (IOException e) { e.printStackTrace(); }
 
             // We know that reading a non existing file throw an exception (see test before)
             // So if there is no exception here, it means the file exist
@@ -100,7 +113,28 @@ public class DatabaseTest {
         @Test
         @DisplayName("Writing a list into a file should replace the previous list by the new one")
         public void WritingNewList() {
-            // Not written yet
+
+            // Read the file
+            try {
+                itemsForTest = databaseForTest.getListFromFile();
+            } catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
+            // Add two objects in list and write it into file
+            itemsForTest.add(new Item("Expense", "Test1", 0, 1));
+            itemsForTest.add(new Item("Income", "Test2", 0, 2));
+
+            try {
+                databaseForTest.writeListIntoFile(itemsForTest);
+            } catch (IOException e) { e.printStackTrace(); }
+
+            // Read the file again
+            try {
+                itemsForTest = databaseForTest.getListFromFile();
+            } catch (IOException | ClassNotFoundException e) { e.printStackTrace(); }
+
+            // Check content
+            String expected = "[Expense | Test1 | 0 | January, Income | Test2 | 0 | February]";
+            assertThat(expected).isEqualTo(itemsForTest.toString());
         }
 
     }
