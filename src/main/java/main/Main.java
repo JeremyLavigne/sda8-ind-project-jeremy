@@ -1,6 +1,7 @@
 package main;
 
 import database.Database;
+import graphicalUserInterface.GUI;
 import userInterface.UserInterface;
 
 import java.io.IOException;
@@ -26,17 +27,31 @@ public class Main {
         // Create account
         Account userAccount = new Account(savedList);
 
-        // Launch Interface
+        // Launch Interface -> Two options
         UserInterface ui = new UserInterface(userAccount);
-        ui.start();
 
-        userAccount.printItems("All", "Month", "Ascending");
+        System.out.println("\nWelcome to TrackMoney.");
 
-        // Save List of items in database
-        try {
-            myDatabase.writeListIntoFile(savedList);
+        System.out.println("---------------------------------------");
+        System.out.println("\nWould you use :\n" +
+                "(1) A console interface (regular project) \n" +
+                "(2) A graphical interface (new feature) \n");
 
-        } catch (IOException e) { e.printStackTrace(); }
+        int input = ui.getExpectedInteger(1,2);
 
+        if (input == 1) { // Launch classic interface
+            ui.start();
+
+            // Save List of items in database when ui.stop()
+            try {
+                myDatabase.writeListIntoFile(savedList);
+
+            } catch (IOException e) { e.printStackTrace(); }
+
+        } else { // Launch graphical interface
+
+            GUI gui = new GUI(userAccount, myDatabase); // Need to build it with database too
+            gui.run(); // Show window
+        }
     }
 }
