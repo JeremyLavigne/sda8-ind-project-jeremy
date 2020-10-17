@@ -195,6 +195,7 @@ public class UserInterface {
 
         String[] options = new String[6];
 
+        // 'What' ? 2 options on 3 - 'All' and/or 'Only expenses' and/or 'Only incomes'
         if (what.equals("All")) {
             options[0] = "Only Expenses";
             options[1] = "Only Incomes";
@@ -206,6 +207,7 @@ public class UserInterface {
             options[1] = "Only Expenses";
         }
 
+        // 'Sort By' ? 2 options on 3 - 'Month' and/or 'Title' and/or 'Amount'
         if (sortBy.equals("Month")) {
             options[2] = "Title";
             options[3] = "Amount";
@@ -217,8 +219,10 @@ public class UserInterface {
             options[3] = "Title";
         }
 
+        // 'How' ? 1 option on 2 - 'Descending' or 'Ascending'
         options[4] = how.equals("Descending") ? "Ascending" : "Descending";
 
+        // Last option - Always 'Back to menu'
         options[5] = "Back to menu";
 
         return options;
@@ -226,6 +230,15 @@ public class UserInterface {
 
     /**
      * Offer options to re-arrange the list of items - display at the bottom of it.
+     *
+     * Expected output : <
+     * Options :
+     * - Show (1) option1 (2) option2
+     * - Sort by (3) option3 (4) option4
+     * - Change order to (5) option5
+     *
+     * (6) Back to menu
+     * >
      *
      * @param options -> options to display
      */
