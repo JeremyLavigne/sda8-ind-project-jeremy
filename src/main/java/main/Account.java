@@ -65,11 +65,25 @@ public class Account {
     /**
      * Define the correct list to be display, regarding user choices. Then, print the list.
      *
+     * (Splitted in two subfunctions -> useful for new GUI)
+     */
+    public void printItems(String what, String sortBy, String how) {
+
+        List<Item> listToPrint = selectItems(what,sortBy,how);
+
+        printList(listToPrint);
+    }
+
+    /**
+     * Define the correct list to be display, regarding user choices. Then, print the list.
+     *
      * @param what -> 'All', 'Only expenses' or 'Only incomes'
      * @param sortBy -> 'Month', 'Title' or 'Amount'
      * @param how -> 'Descending' or 'Ascending'
+     *
+     * @return -> the correct list
      */
-    public void printItems(String what, String sortBy, String how) {
+    public List<Item> selectItems(String what, String sortBy, String how) {
 
         List<Item> listToPrint = this.items;
 
@@ -99,10 +113,9 @@ public class Account {
         }
         // if "Ascending", keep original order
 
-        System.out.println("\n ------------------------------------\n");
-
-        printList(listToPrint);
+        return listToPrint;
     }
+
 
     /**
      * Display the list in parameter - add a line number

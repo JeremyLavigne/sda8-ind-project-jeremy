@@ -14,20 +14,21 @@ import java.util.ArrayList;
 
 public class GUITest {
     private static FrameFixture window;
+    private static GUI testableGUI;
 
     @BeforeClass
     public static void setUpOnce() {
         FailOnThreadViolationRepaintManager.install();
     }
 
-    @BeforeAll
+    @BeforeEach
     public static void setUp() {
         // Create a fake GUI here.
         Account acc = new Account(new ArrayList<>());
         Database db = new Database("assets/testFile.txt");
-        Frame frame = GuiActionRunner.execute(() -> new GUI(acc, db));
+        testableGUI = GuiActionRunner.execute(() -> new GUI(acc, db));
 
-        window = new FrameFixture(frame);
+        window = new FrameFixture(testableGUI);
         //window.show();
     }
 
@@ -35,11 +36,13 @@ public class GUITest {
     @Test
     @DisplayName("Window is open in its original size")
     public void windowOpenOriginalSize() {
+        testableGUI.start();
+
         window.isEnabled();
         window.requireSize(new Dimension(800, 600));
     }
 
-    @AfterAll
+    @AfterEach
     public static void tearDown() {
         window.cleanUp();
     }

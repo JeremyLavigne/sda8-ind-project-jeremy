@@ -51,7 +51,7 @@ public class Main {
         } else { // Launch graphical interface
 
             GUI gui = new GUI(userAccount, myDatabase); // Need to build it with database too
-            gui.run(); // Show window
+            gui.start();
         }
     }
 }
