@@ -7,15 +7,16 @@ import java.util.Scanner;
 
 
 /**
- * This class provides all user interface : menu(s), user choices via console input.
+ * This class provides all we need regarding user interface :
+ * Menu(s), user choices via console input, link to GUI.
  * Dispatch to correct data/methods regarding user choice.
  *
  * @author Jeremy
  * @version 1.0
  */
 public class UserInterface {
-    private final Account account;
-    private final Scanner scan;
+    private Account account;
+    private Scanner scan;
     private boolean exit; // Used for staying in the menu or exit the program
 
     public UserInterface(Account userAccount){
