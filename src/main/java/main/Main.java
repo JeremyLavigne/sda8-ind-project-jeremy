@@ -50,7 +50,7 @@ public class Main {
 
         } else { // Launch graphical interface
 
-            GUI gui = new GUI(userAccount, myDatabase); // Need to build it with database too
+            GUI gui = new GUI(userAccount, myDatabase);
             gui.start();
         }
     }

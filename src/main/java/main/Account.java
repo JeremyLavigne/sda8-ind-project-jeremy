@@ -65,7 +65,7 @@ public class Account {
     /**
      * Define the correct list to be display, regarding user choices. Then, print the list.
      *
-     * (Splitted in two subfunctions -> useful for new GUI)
+     * (Split in two sub-functions -> useful for new GUI)
      */
     public void printItems(String what, String sortBy, String how) {
 

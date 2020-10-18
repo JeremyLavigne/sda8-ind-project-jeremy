@@ -17,6 +17,8 @@ import java.util.ArrayList;
 /**
  * This class is the entry point of the Graphical User Interface.
  *
+ * TODO (?) Split those 500 lines into several classes - does it make sense ?
+ *
  * @author Jeremy
  * @version 1.0
  */
@@ -126,42 +128,40 @@ public class GUI extends JFrame {
      */
     private Runnable setShowItemComponent(ArrayList<Item> items) {
 
-        return (new Runnable() {
-            public void run() {
+        return (() -> {
 
-                // Top - buttons for sorting (all, by title, descending, etc..)
-                JPanel buttonsPane = new JPanel(new MigLayout());
-                JButton[] sortingButtons = configureSortingButtons();
+            // Top - buttons for sorting (all, by title, descending, etc..)
+            JPanel buttonsPane = new JPanel(new MigLayout());
+            JButton[] sortingButtons = configureSortingButtons();
 
-                for (int i = 0; i < sortingButtons.length; i++) {
-                    if (i == 2 || i == 5) {
-                        buttonsPane.add(sortingButtons[i], "wrap");
-                    } else {
-                        buttonsPane.add(sortingButtons[i]);
-                    }
+            for (int i = 0; i < sortingButtons.length; i++) {
+                if (i == 2 || i == 5) {
+                    buttonsPane.add(sortingButtons[i], "wrap");
+                } else {
+                    buttonsPane.add(sortingButtons[i]);
                 }
-
-                // Bottom - displayed List of items
-                JPanel listPane = new JPanel(new MigLayout());
-                listPane.setPreferredSize(new Dimension(780, 400));
-                listPane.setBackground(Color.white);
-
-                for (Item item : items) {
-                    JLabel lab = new JLabel(item.toString());
-                    lab.setFont(new Font("Serif", Font.PLAIN, 18));
-
-                    if (item.getType().equals("Expense")) {
-                        lab.setForeground(Color.red);
-                    } else {
-                        lab.setForeground(Color.blue);
-                    }
-                    listPane.add(lab, "wrap");
-                }
-
-                bottomComponent.setLayout(new MigLayout());
-                bottomComponent.add(buttonsPane, "wrap");
-                bottomComponent.add((listPane));
             }
+
+            // Bottom - displayed List of items
+            JPanel listPane = new JPanel(new MigLayout());
+            listPane.setPreferredSize(new Dimension(780, 400));
+            listPane.setBackground(Color.white);
+
+            for (Item item : items) {
+                JLabel lab = new JLabel(item.toString());
+                lab.setFont(new Font("Serif", Font.PLAIN, 18));
+
+                if (item.getType().equals("Expense")) {
+                    lab.setForeground(Color.red);
+                } else {
+                    lab.setForeground(Color.blue);
+                }
+                listPane.add(lab, "wrap");
+            }
+
+            bottomComponent.setLayout(new MigLayout());
+            bottomComponent.add(buttonsPane, "wrap");
+            bottomComponent.add((listPane));
         });
     }
 
@@ -173,70 +173,67 @@ public class GUI extends JFrame {
      */
     private Runnable setAddItemComponent() {
 
-        return (new Runnable() {
-            public void run() {
+        return (() -> {
 
-                // Top - Form
-                JPanel form = new JPanel(new MigLayout());
-                form.setBorder(new MatteBorder(0,0,1,0,Color.BLACK));
+            // Top - Form
+            JPanel form = new JPanel(new MigLayout());
+            form.setBorder(new MatteBorder(0,0,1,0,Color.BLACK));
 
-                // Type
-                form.add(new JLabel("Type"));
-                String[] elementsList1 = new String[]{"Expense", "Income"};
-                JComboBox<String> typeList = new JComboBox<>(elementsList1);
-                form.add(typeList, "wrap");
+            // Type
+            form.add(new JLabel("Type"));
+            String[] elementsList1 = new String[]{"Expense", "Income"};
+            JComboBox<String> typeList = new JComboBox<>(elementsList1);
+            form.add(typeList, "wrap");
 
-                // Title
-                form.add(new JLabel("Title"));
-                JTextField titleField = new JTextField(30);
-                form.add(titleField, "wrap");
+            // Title
+            form.add(new JLabel("Title"));
+            JTextField titleField = new JTextField(30);
+            form.add(titleField, "wrap");
 
-                // Amount
-                form.add(new JLabel("Amount"));
-                JTextField amountField = new JTextField(10);
-                form.add(amountField, "wrap");
+            // Amount
+            form.add(new JLabel("Amount"));
+            JTextField amountField = new JTextField(10);
+            form.add(amountField, "wrap");
 
-                // Month
-                form.add(new JLabel("Month"));
-                String[] elementsList2 = new String[]{"January","February","March","April",
-                        "May","June","July","August","September",
-                        "October","November","December"};
-                JComboBox<String> monthList = new JComboBox<>(elementsList2);
-                form.add(monthList, "wrap");
+            // Month
+            form.add(new JLabel("Month"));
+            String[] elementsList2 = new String[]{"January","February","March","April",
+                    "May","June","July","August","September",
+                    "October","November","December"};
+            JComboBox<String> monthList = new JComboBox<>(elementsList2);
+            form.add(monthList, "wrap");
 
 
-                // Bottom - Validation button (No confirmation message yet)
-                JButton addButton = new JButton("Add");
-                addButton.addActionListener(e -> {
+            // Bottom - Validation button (No confirmation message yet)
+            JButton addButton = new JButton("Add");
+            addButton.addActionListener(e -> {
 
-                    // Check/Convert all data coming from form
-                    String title = titleField.getText().length() > 40 ?
-                                    titleField.getText().substring(0,40) : titleField.getText();
-                    int amount = 0;
-                    try {
-                        amount = Integer.parseInt(amountField.getText());
-                    } catch (Exception ex) {
-                        System.out.println(amountField.getText() + " is not a number, 0 will be used instead.");
-                    }
-                    String type = (String) typeList.getSelectedItem();
-                    int month = monthList.getSelectedIndex() + 1;
+                // Check/Convert all data coming from form
+                String title = titleField.getText().length() > 40 ?
+                                titleField.getText().substring(0,40) : titleField.getText();
+                int amount = 0;
+                try {
+                    amount = Integer.parseInt(amountField.getText());
+                } catch (Exception ex) {
+                    System.out.println(amountField.getText() + " is not a number, 0 will be used instead.");
+                }
+                String type = (String) typeList.getSelectedItem();
+                int month = monthList.getSelectedIndex() + 1;
 
-                    // Add new Item
-                    account.addItem(new Item(type, title, amount, month));
+                // Add new Item
+                account.addItem(new Item(type, title, amount, month));
 
-                    // Refresh
-                    bottomComponent.removeAll();balanceSummary.removeAll();
-                    setAddItemComponent();setBalanceSummary();
-                    bottomComponent.revalidate();balanceSummary.revalidate();
-                    bottomComponent.repaint();balanceSummary.repaint();
-                });
+                // Refresh
+                refreshBalance();
+                changeBottomComponent(setConfirmationMessage("added"));
 
-                // Wrap all
-                bottomComponent.setLayout(new MigLayout());
-                bottomComponent.add(form, "wrap");
-                bottomComponent.add((addButton));
+            });
 
-            }
+            // Wrap all
+            bottomComponent.setLayout(new MigLayout());
+            bottomComponent.add(form, "wrap");
+            bottomComponent.add((addButton));
+
         });
     }
 
@@ -247,11 +244,58 @@ public class GUI extends JFrame {
      * @return Runnable function - in order to be called as a parameter
      */
     private Runnable setEditItemComponent() {
-        return (new Runnable() {
-            public void run() {
-                bottomComponent.add(new JLabel("Not Ready Yet"));
+        return (() -> {
+
+            // Waiting for edit implementation
+            JLabel workingOn = new JLabel("Editing feature is not ready yet." +
+                    " If you need to edit, please remove and add a new item.");
+
+            // Bottom - displayed List of items
+            JPanel listPane = new JPanel(new MigLayout());
+            listPane.setPreferredSize(new Dimension(780, 400));
+            listPane.setBackground(Color.white);
+
+            ArrayList<Item> items = (ArrayList<Item>) account.getItems();
+
+            for (int i = 0; i < items.size(); i++) {
+                JLabel lab = new JLabel(items.get(i).toString());
+                lab.setFont(new Font("Serif", Font.PLAIN, 16));
+
+                if (items.get(i).getType().equals("Expense")) {
+                    lab.setForeground(Color.red);
+                } else {
+                    lab.setForeground(Color.blue);
+                }
+
+                // Remove button - different for each item
+                JButton removeButton = new JButton("Remove");
+                int index = i;
+                removeButton.addActionListener(e -> {
+                    account.removeItem(index);  // Remove item
+                    // Refresh
+                    refreshBalance();
+                    changeBottomComponent(setConfirmationMessage("deleted"));
+
+                });
+
+
+                listPane.add(new JButton("Edit")); // Not ready
+                listPane.add(removeButton);
+                listPane.add(lab, "wrap");
             }
+
+            bottomComponent.setLayout(new MigLayout());
+            bottomComponent.add(workingOn, "wrap");
+            bottomComponent.add(listPane);
+
         });
+    }
+
+    /**
+     * Message displayed after adding an item
+     */
+    private Runnable setConfirmationMessage(String message) {
+        return (() -> bottomComponent.add(new JLabel("Your item has been successfully " + message + ".")));
     }
 
 
@@ -274,6 +318,18 @@ public class GUI extends JFrame {
         balanceSummary.add(balance, "align center");
 
     }
+
+    /**
+     * Refresh balance..
+     */
+    private void refreshBalance() {
+        balanceSummary.removeAll();
+        setBalanceSummary();
+        balanceSummary.revalidate();
+        balanceSummary.repaint();
+    }
+
+
 
 
 
