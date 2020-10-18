@@ -24,17 +24,17 @@ import java.util.ArrayList;
 public class GUI extends JFrame {
     private Account account;
     private Database database;  // Used to save in, not to read in.
-    private JLabel balance; // Need to be refresh at every change.
+    private JPanel balanceSummary; // Need to be refresh at every change.
     private JPanel bottomComponent; // Can be either 'Show Items', 'Add Items' or 'Edit Items'.
 
 
     public GUI(Account userAccount, Database userDatabase) {
         this.account = userAccount;
         this.database = userDatabase;
-        this.balance = new JLabel();
+        this.balanceSummary = new JPanel();
         this.bottomComponent = new JPanel();
 
-        setBalance();
+        setBalanceSummary();
         setShowItemComponent((ArrayList<Item>) account.getItems());
 
         this.setTitle("Money Tracker");
@@ -108,11 +108,6 @@ public class GUI extends JFrame {
         topComponent.setBorder(new MatteBorder(0, 0, 1, 0, Color.BLACK));
 
         // On left - Balance Summary
-        JPanel balanceSummary = new JPanel();
-
-        balanceSummary.setLayout(new MigLayout());
-        balanceSummary.setBorder(new MatteBorder(0, 0, 0, 1, Color.BLACK));
-        balanceSummary.add(balance, "align center");
 
         // On right - menu buttons
         JPanel menuButtons = new JPanel();
@@ -159,7 +154,7 @@ public class GUI extends JFrame {
 
         for (int i = 0; i < items.size(); i++) {
             JLabel lab = new JLabel(items.get(i).toString());
-            lab.setFont(new Font("Serif", Font.PLAIN, 14));
+            lab.setFont(new Font("Serif", Font.PLAIN, 18));
 
             if (items.get(i).getType().equals("Expense")) {
                 lab.setForeground(Color.red);
@@ -177,13 +172,68 @@ public class GUI extends JFrame {
 
 
     /**
-     * Configure the 'Show items Component', the one supposed to add a new item
+     * Configure the 'Add item Component', the one supposed to add a new item
      */
     private void setAddItemComponent() {
 
-        bottomComponent.add(new JLabel("Please fill the form to add a new Item"));
+        // Top - Form
+        JPanel form = new JPanel(new MigLayout());
+        form.setBorder(new MatteBorder(0,0,1,0,Color.BLACK));
 
-        bottomComponent.add(new JTextField());
+        // Type
+        form.add(new JLabel("Type"));
+        String[] elementsList1 = new String[]{"Expense", "Income"};
+        JComboBox typeList = new JComboBox<>(elementsList1);
+        form.add(typeList, "wrap");
+
+        // Title
+        form.add(new JLabel("Title"));
+        JTextField titleField = new JTextField(30);
+        form.add(titleField, "wrap");
+
+        // Amount
+        form.add(new JLabel("Amount"));
+        JTextField amountField = new JTextField(10);
+        form.add(amountField, "wrap");
+
+        // Month
+        form.add(new JLabel("Month"));
+        String[] elementsList2 = new String[]{"January","February","March","April",
+                "May","June","July","August","September",
+                "October","November","December"};
+        JComboBox monthList = new JComboBox<>(elementsList2);
+        form.add(monthList, "wrap");
+
+
+        // Bottom - Validation button (No confirmation message yet)
+        JButton addButton = new JButton("Add");
+        addButton.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e) {
+                // Add to list
+                String title = titleField.getText().length() > 40 ?
+                                titleField.getText().substring(0,40) : titleField.getText();
+                int amount = 0;
+                try {
+                    amount = Integer.parseInt(amountField.getText());
+                } catch (Exception ex) {  }
+
+                String type = typeList.getSelectedItem().toString();
+                int month = monthList.getSelectedIndex() + 1;
+
+                account.addItem(new Item(type, title, amount, month));
+
+                // Refresh
+                bottomComponent.removeAll();balanceSummary.removeAll();
+                setAddItemComponent();setBalanceSummary();
+                bottomComponent.revalidate();balanceSummary.revalidate();
+                bottomComponent.repaint();balanceSummary.repaint();
+            }
+        });
+
+        // Wrap all
+        bottomComponent.setLayout(new MigLayout());
+        bottomComponent.add(form, "wrap");
+        bottomComponent.add((addButton));
 
     }
 
@@ -194,9 +244,7 @@ public class GUI extends JFrame {
      */
     private void setEditItemComponent() {
 
-        bottomComponent.add(new JLabel("Edit your fucking Item"));
-
-        bottomComponent.add(new JTextField());
+        bottomComponent.add(new JLabel("Not Ready Yet"));
 
     }
 
@@ -210,10 +258,21 @@ public class GUI extends JFrame {
      * Balance will be updated here.
      * This method will be called every time balance changes.
      *
-     * @return JLabel up to date
      */
-    private void setBalance() {
-        balance = new JLabel("Balance : " + Integer.toString(this.account.getBalance()) + " kr");
+    private void setBalanceSummary() {
+
+        balanceSummary.setLayout(new MigLayout());
+
+        int bal = account.getBalance();
+        if (bal < 0) {
+            balanceSummary.setBackground(Color.RED);
+        } else {
+            balanceSummary.setBackground(Color.GREEN);
+        }
+
+        JLabel balance = new JLabel("Balance : " + bal + " kr");
+        balanceSummary.add(balance, "align center");
+
     }
 
 
